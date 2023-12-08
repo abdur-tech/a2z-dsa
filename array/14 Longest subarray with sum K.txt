@@ -1,0 +1,23 @@
+Longest Subarray with given Sum K(Positives and negative)
+
+#include <bits/stdc++.h> 
+
+int getLongestSubarray(vector<int>& a, int k){
+    int cnt = 0;
+    int sum = 0;
+    unordered_map<int,int> mp;
+    for(int i = 0;i<a.size();i++)
+    {
+        sum=sum+a[i];
+        if(sum==k) cnt=max(cnt,i+1);
+        int rem = sum - k;
+        if(mp.find(rem)!=mp.end()){
+            cnt = max(cnt,i-mp[rem]);
+        }
+        if(mp.find(sum)==mp.end())
+        {
+            mp[sum]=i;
+        }
+    }
+    return cnt;
+}
