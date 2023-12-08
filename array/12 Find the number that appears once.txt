@@ -1,0 +1,29 @@
+Problem Statement: Given a non-empty array of integers arr, every element appears twice except for one. Find that single one.
+
+Example 1:
+Input Format: arr[] = {2,2,1}
+Result: 1
+Explanation: In this array, only the element 1 appear once and so it is the answer.
+
+#include<vector>
+
+int getSingleElement(vector<int> &arr){
+	int n=arr.size();
+
+	int ans = 0;
+
+	for(int i=1; i<n; i+=2){
+
+		if(arr[i-1] != arr[i]){
+
+				ans = arr[i-1];
+				return ans;
+
+		}
+
+	}
+
+	return arr[n-1];
+
+	
+}
