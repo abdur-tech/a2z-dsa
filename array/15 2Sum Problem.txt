@@ -1,0 +1,25 @@
+Check if a pair with given sum exists in Array
+
+Return YES if there exist two numbers such that their sum is equal to the target. Otherwise, return NO.
+
+Example 1:
+Input Format: N = 5, arr[] = {2,6,5,8,11}, target = 14
+Result: YES 
+
+string read(int n, vector<int> book, int target)
+{
+    // Write your code here.
+    unordered_map<int,int> mp;
+    for(int i = 0;i<n;i++)
+    {
+        if(mp.find(target-book[i])!=mp.end()){
+            return "YES";
+        }
+        mp[book[i]]=1;
+    }
+    return "NO";
+}
+
+TC -> O n(log n) 
+    worst case  
+SC -> O(n)

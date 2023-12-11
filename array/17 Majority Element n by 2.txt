@@ -1,0 +1,42 @@
+Find the Majority Element that occurs more than N/2 times
+
+Problem Statement: Given an array of N integers, write a program to return an element that occurs more than N/2 times in the given array. You may consider that such an element always exists in the array.
+
+Example 1:
+Input Format: N = 3, nums[] = {3,2,3}
+Result: 3
+Explanation: When we just count the occurrences of each number and compare with half of the size of the array, you will get 3 for the above solution. 
+
+Example 2:
+Input Format:  N = 7, nums[] = {2,2,1,1,1,2,2}
+
+Result: 2
+
+Explanation: After counting the number of times each element appears and comparing it with half of array size, 
+we get 2 as result.
+
+Intuition:
+If the array contains a majority element, its occurrence must be greater than the floor(N/2).
+ Now, we can say that the count of minority elements and majority elements is equal up to a certain 
+ point in the array. So when we traverse through the array we try to keep track of the count of elements 
+ and the element itself for which we are tracking the count. 
+
+After traversing the whole array, we will check the element stored in the variable.
+ If the question states that the array must contain a majority element, the stored element will 
+ be that one but if the question does not state so, then we need to check if the stored element is the 
+ majority element or not. If not, then the array does not contain any majority element.
+
+ int majorityElement(vector<int> v) {
+	int count = 0;
+	int candidate = -1;
+	for(auto it:v)
+	{
+		if(count==0) candidate=it;
+		if (candidate==it) count++;
+		else count--;
+	}
+	return candidate;
+}
+TC -> O(N)
+SC -> O(1)
+
