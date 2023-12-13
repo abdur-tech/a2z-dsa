@@ -1,0 +1,124 @@
+Rearrange Array Elements by Sign
+
+Variety-1
+
+Problem Statement:
+
+There’s an array ‘A’ of size ‘N’ with an equal number of positive and negative elements. Without altering the relative order of positive and negative elements, you must return an array of alternately positive and negative values.
+
+Example 1:
+
+Input:
+arr[] = {1,2,-4,-5}, N = 4
+Output:
+1 -4 2 -5
+
+Explanation: 
+
+Positive elements = 1,2
+Negative elements = -4,-5
+To maintain relative ordering, 1 must occur before 2, and -4 must occur before -5.
+
+Example 2:
+Input:
+arr[] = {1,2,-3,-1,-2,-3}, N = 6
+Output:
+1 -3 2 -1 3 -2
+Explanation: 
+
+Positive elements = 1,2,3
+Negative elements = -3,-1,-2
+To maintain relative ordering, 1 must occur before 2, and 2 must occur before 3.
+Also, -3 should come before -1, and -1 should come before -2.
+
+
+vector<int> alternateNumbers(vector<int>&a) {
+    int pos = 0;
+    int neg = 1;
+    vector<int> ans(a.size(),0);
+    for(int i = 0;i<a.size();i++){
+        if(a[i]<0){
+            ans[neg]=a[i];
+            neg+=2;
+        }
+        else{
+            ans[pos]=a[i];
+            pos+=2;
+        }
+    }
+    return ans;
+}
+Time Complexity: O(N) { O(N) for traversing the array once and substituting positives and negatives simultaneously using pointers, where N = size of the array A}.
+
+Space Complexity:  O(N) { Extra Space used to store the rearranged elements separately in an array, where N = size of array A}.
+
+-------------------------------------------------------------------------------
+
+
+Variety-2
+
+Problem Statement:
+There’s an array ‘A’ of size ‘N’ with positive and negative elements (not necessarily equal). Without altering the relative order of positive and negative elements, you must return an array of alternately positive and negative values. The leftover elements should be placed at the very end in the same order as in array A.
+
+In this variety, the number of positive and negative numbers shall not necessarily be equal to each other in the given array. 
+So, there can be two cases possible: either the positive elements exceed the negatives or the negatives exceed the positives. 
+So, instead of using the optimal solution discussed for the variety-1 above, we’ll fall back to the brute force solution where
+ we create separate arrays for storing positives and negatives and then put them back into the array alternatively. 
+ The remaining negative or positive elements are added to the array at last.
+
+
+vector<int> RearrangebySign(vector<int>A, int n){
+    
+  // Define 2 vectors, one for storing positive 
+  // and other for negative elements of the array.
+  vector<int> pos;
+  vector<int> neg;
+  
+  // Segregate the array into positives and negatives.
+  for(int i=0;i<n;i++){
+      
+      if(A[i]>0) pos.push_back(A[i]);
+      else neg.push_back(A[i]);
+  }
+  
+  // If positives are lesser than the negatives.
+  if(pos.size() < neg.size()){
+      
+    // First, fill array alternatively till the point 
+    // where positives and negatives ar equal in number.
+    for(int i=0;i<pos.size();i++){
+      
+      A[2*i] = pos[i];
+      A[2*i+1] = neg[i];
+    }
+    
+    // Fill the remaining negatives at the end of the array.
+    int index = pos.size()*2;
+    for(int i = pos.size();i<neg.size();i++){
+        
+        A[index] = neg[i];
+        index++;
+    }
+  }
+  
+  // If negatives are lesser than the positives.
+  else{
+      
+      // First, fill array alternatively till the point 
+      // where positives and negatives ar equal in number.
+      for(int i=0;i<neg.size();i++){
+      
+      A[2*i] = pos[i];
+      A[2*i+1] = neg[i];
+  }
+    
+    // Fill the remaining positives at the end of the array.
+    int index = neg.size()*2;
+    for(int i = neg.size();i<pos.size();i++){
+        
+        A[index] = pos[i];
+        index++;
+    }
+  }
+  return A;
+}

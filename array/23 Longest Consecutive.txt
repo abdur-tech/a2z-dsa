@@ -1,0 +1,78 @@
+Longest Consecutive Sequence in an Array
+
+Problem Statement: You are given an array of ‘N’ integers. You need to find the length of the longest sequence which contains the consecutive elements.
+
+Example 1:
+
+Input: [100, 200, 1, 3, 2, 4]
+
+Output: 4
+
+Explanation: The longest consecutive subsequence is 1, 2, 3, and 4.
+
+Input: [3, 8, 5, 7, 6]
+
+Output: 4
+
+Explanation: The longest consecutive subsequence is 5, 6, 7, and 8.
+
+Solution 1:
+
+int longestSuccessiveElements(vector<int>&a) {
+    // Write your code here.
+    sort(a.begin(),a.end());
+    int ans = 0;
+    int len = 1;
+    for(int i = 0;i<a.size()-1;i++){
+        if(a[i]==a[i+1]) continue;
+        if(abs(a[i]-a[i+1])==1){
+            len++;
+            ans = max(ans,len);
+        }
+        else{
+            len=1;
+        }
+    }
+    return ans;
+}
+TC o(Nlogn)
+SC O(1) or O(N)
+
+Sol 2:
+
+int longestSuccessiveElements(vector<int>&a) {
+    int n = a.size();
+    if (n == 0) return 0;
+
+    int longest = 1;
+    unordered_set<int> st;
+    //put all the array elements into set:
+    for (int i = 0; i < n; i++) {
+        st.insert(a[i]);
+    }
+
+    //Find the longest sequence:
+    for (auto it : st) {
+        //if 'it' is a starting number:
+        if (st.find(it - 1) == st.end()) {
+            //find consecutive numbers:
+            int cnt = 1;
+            int x = it;
+            while (st.find(x + 1) != st.end()) {
+                x = x + 1;
+                cnt = cnt + 1;
+            }
+            longest = max(longest, cnt);
+        }
+    }
+    return longest;
+
+}
+Time Complexity: O(N) + O(2*N) ~ O(3*N), where N = size of the array.
+Reason: O(N) for putting all the elements into the set data structure. After that for every starting element, we are finding the consecutive elements. Though we are using nested loops, the set will be traversed at most twice in the worst case. So, the time complexity is O(2*N) instead of O(N2).
+Space Complexity: O(N), as we are using the set data structure to solve this problem.
+
+Note: The time complexity is computed under the assumption that we are using unordered_set and it is taking O(1) for the set operations. 
+
+If we consider the worst case the set operations will take O(N) in that case and the total time complexity will be approximately O(N2). 
+And if we use the set instead of unordered_set, the time complexity for the set operations will be O(logN) and the total time complexity will be O(NlogN).
