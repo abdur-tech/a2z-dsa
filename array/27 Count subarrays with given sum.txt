@@ -1,0 +1,75 @@
+Count Subarray sum Equals K
+Problem Statement: Given an array of integers and an integer k, return the total number of subarrays whose sum equals k.
+
+A subarray is a contiguous non-empty sequence of elements within an array.
+
+Example 1:
+Input Format: N = 4, array[] = {3, 1, 2, 4}, k = 6
+Result: 2
+Explanation: The subarrays that sum up to 6 are [3, 1, 2] and [2, 4].
+
+Example 2:
+Input Format: N = 3, array[] = {1,2,3}, k = 3
+Result: 2
+Explanation: The subarrays that sum up to 3 are [1, 2], and [3].
+----------------------------
+MY solution:
+
+int findAllSubarraysWithGivenSum(vector < int > & arr, int k) {
+    // Write Your Code Here
+    int j = 0;
+    int ans = 0;
+    int sum = 0;
+    for(int i = 0;i<arr.size();i++){
+        sum+=arr[i];
+        if(sum==k){
+            ans++;
+        }
+        while(sum>=k){
+            sum-=arr[j];
+            j++;
+            if(sum==k) ans++;
+        }
+        
+    }
+    return ans;
+}
+
+______________________
+
+striver optimal and it is good Problem
+
+Algorithm / Intuition
+In this approach, we are going to use the concept of the prefix sum to solve this problem. Here, the prefix sum of a subarray ending at index i simply means the sum of all the elements of that subarray.
+
+int findAllSubarraysWithGivenSum(vector < int > & arr, int k) {
+    int n = arr.size(); // size of the given array.
+    map mpp;
+    int preSum = 0, cnt = 0;
+
+    mpp[0] = 1; // Setting 0 in the map.
+    for (int i = 0; i < n; i++) {
+        // add current element to prefix Sum:
+        preSum += arr[i];
+
+        // Calculate x-k:
+        int remove = preSum - k;
+
+        // Add the number of subarrays to be removed:
+        cnt += mpp[remove];
+
+        // Update the count of prefix sum
+        // in the map.
+        mpp[preSum] += 1;
+    }
+    return cnt;
+}
+
+Time Complexity: O(N) or O(N*logN) depending on which map data structure we are using, where N = size of the array.
+Reason: For example, if we are using an unordered_map data structure in C++ the time complexity will be O(N) but if we are using a map data structure, the time complexity will be O(N*logN). The least complexity will be O(N) as we are using a loop to traverse the array.
+
+Note: To know more about maps, please refer to this: Hashing | Maps | Time Complexity | Collisions | Division Rule of Hashing | Strivers A2Z DSA Course.
+
+Space Complexity: O(N) as we are using a map data structure.
+
+
