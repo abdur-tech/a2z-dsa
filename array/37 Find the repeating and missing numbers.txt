@@ -98,7 +98,7 @@ vector<int> findMissingRepeatingNumbers(vector<int> a) {
 
     //Find X+Y = (X^2-Y^2)/(X-Y):
     val2 = val2 / val1;
-
+ 
     //Find X and Y: X = ((X+Y)+(X-Y))/2 and Y = X-(X-Y),
     // Here, X-Y = val1 and X+Y = val2:
     long long x = (val1 + val2) / 2;
