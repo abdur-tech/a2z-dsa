@@ -1,0 +1,55 @@
+Maximum Product Subarray in an Array
+Problem Statement: Given an array that contains both negative and positive integers, find the maximum product subarray.
+
+
+Example 1:
+Input:
+ Nums = [1,2,3,4,5,0]
+Output:
+ 120
+Explanation:
+ In the given array, we can see 1×2×3×4×5 gives maximum product value.
+
+
+Example 2:
+Input:
+ Nums = [1,2,-3,0,-4,-5]
+Output:
+ 20
+Explanation:
+ In the given array, we can see (-4)×(-5) gives maximum product value.
+
+
+
+
+#include<vector>
+#include<bits/stdc++.h>
+int subarrayWithMaxProduct(vector<int> &arr){
+	int pref =1;
+	int suff = 1;
+	int n = arr.size();
+	int maxi = INT_MIN;
+	for(int i = 0;i<n;i++)
+	{
+		if(pref==0) pref=1;
+		if(suff==0) suff=1;
+
+		pref*=arr[i];
+		suff*=arr[n-i-1];
+		maxi = max(maxi,max(pref,suff));
+	}
+	return maxi;
+}
+
+check my notes problem also
+
+Complexity Analysis
+
+Time Complexity: O(N)
+
+Reason: A single iteration is used.
+
+Space Complexity: O(1)
+
+Reason: No extra data structure is used for computation
+
