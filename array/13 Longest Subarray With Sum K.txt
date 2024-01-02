@@ -38,7 +38,7 @@ int _longestSubarrayWithSumK(vector<int> a, long long k) {
 }
 
 
-int longestSubarrayWithSumK(vector<int> a, long long k) {
+int longestSubarrayWithSumK(vector<int> a, long long k) { for positive
     int n=a.size();
     int maxlen=0;
     int right=0;
