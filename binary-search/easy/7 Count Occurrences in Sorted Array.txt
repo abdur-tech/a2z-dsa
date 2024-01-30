@@ -1,0 +1,48 @@
+Count Occurrences in Sorted Array
+Problem Statement: You are given a sorted array containing N integers and a number X, you have to find the occurrences of X in the given array.
+
+Problem statement
+You have been given a sorted array/list of integers 'arr' of size 'n' and an integer 'x'.
+
+
+
+Find the total number of occurrences of 'x' in the array/list.
+
+
+
+Example:
+Input: 'n' = 7, 'x' = 3
+'arr' = [1, 1, 1, 2, 2, 3, 3]
+
+Output: 2
+
+Explanation: Total occurrences of '3' in the array 'arr' is 2.
+
+Sample Input 2:
+ 5 6
+ 1 2 4 4 5
+
+
+Sample Output 2:
+ 0
+
+
+Explanation For Sample Input 2:
+In the given list, there are 0 occurrences of integer 6.
+
+#include<bits/stdc++.h>
+int count(vector<int>& arr, int n, int x) {
+	int lb_index = (lower_bound(arr.begin(),arr.end(),x)-arr.begin());
+	int up_index = (upper_bound(arr.begin(),arr.end(),x)-arr.begin());
+	
+	if(lb_index==n || arr[lb_index]!=x){
+		return 0;
+	}
+	return up_index-lb_index;
+}
+
+Complexity Analysis
+Time Complexity: O(2*logN), where N = size of the given array.
+Reason: We are basically using the binary search algorithm twice.
+
+Space Complexity: O(1) as we are using no extra space.

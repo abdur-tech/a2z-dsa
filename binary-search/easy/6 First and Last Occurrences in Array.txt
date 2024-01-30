@@ -1,0 +1,58 @@
+First and Last Occurrences in Array
+Problem Statement: Given a sorted array arr of n integers and a target value k. Write a program to find the indices of the first and the last occurrences of the target value. If the target is not found then return -1 as indices.
+
+Example 1:
+Input Format: n = 8, arr[] = {2, 4, 6, 8, 8, 8, 11, 13}, k = 8
+Result: 3 5
+Explanation: The first occurrence of 8 is at index 3 and the last occurrence is at index 5.
+
+Example 2:
+Input Format: n = 8, arr[] = {2, 4, 6, 8, 8, 8, 11, 13}, k = 10
+Result: -1 -1
+Explanation: The target value is not present in the array. So, we have returned -1 as the indices of the first and the last occurrence.
+
+#include <bits/stdc++.h>
+int upperBound(vector<int> &arr, int x, int n){
+	int ans = n;
+	int low = 0;
+	int high = n-1;
+	while(low<=high){
+		int mid = (low+high)/2;
+		if (arr[mid]>x){
+			ans=mid;
+			high=mid-1;
+		}
+		else{
+			low = mid+1;
+		}
+	}
+	return ans;	
+}
+int lowerBound(vector<int> &arr, int x, int n){
+	int ans = n;
+	int low = 0;
+	int high = n-1;
+	while(low<=high){
+		int mid = (low+high)/2;
+		if (arr[mid]>=x){
+			ans=mid;
+			high=mid-1;
+		}
+		else{
+			low = mid+1;
+		}
+	}
+	return ans;	
+}
+pair<int, int> firstAndLastPosition(vector<int>& arr, int n, int k)
+{
+    int lb = lowerBound(arr,k,n);
+    if(lb==n || arr[lb]!=k) return make_pair(-1,-1);
+    int ub = upperBound(arr,k,n);
+    return make_pair(lb,ub-1);
+}
+
+Time Complexity: O(2*logN), where N = size of the given array.
+Reason: We are basically using the binary search algorithm twice.
+
+Space Complexity: O(1) as we are using no extra space.
