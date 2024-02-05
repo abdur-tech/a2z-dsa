@@ -1,0 +1,57 @@
+July 17, 2022 Arrays / Binary search / Data Structure
+Minimum in Rotated Sorted Array
+Problem Statement: Given an integer array arr of size N, sorted in ascending order (with distinct values). Now the array is rotated between 1 to N times which is unknown. Find the minimum element in the array. 
+
+Optimal Approach(Using Binary Search): 
+
+Key Observation: If an array is rotated and sorted, we already know that for every index, one of the 2 halves of the array will always be sorted.
+
+Based on this observation, we adopted a straightforward two-step process to eliminate one-half of the rotated sorted array. 
+
+First, we identify the sorted half of the array. 
+Once found, we determine if the target is located within this sorted half. 
+If not, we eliminate that half from further consideration. 
+Conversely, if the target does exist in the sorted half, we eliminate the other half.
+Let’s observe how we identify the sorted half:
+
+We basically compare arr[mid] with arr[low] and arr[high] in the following way:
+
+If arr[low] <= arr[mid]: In this case, we identified that the left half is sorted.
+If arr[mid] <= arr[high]: In this case, we identified that the right half is sorted.
+Let’s observe how we will find the minimum element:
+
+In this situation, we have two possibilities to consider. The sorted half of the array may or may not include the minimum value. However, we can leverage the property of the sorted half, specifically that the leftmost element of the sorted half will always be the minimum element within that particular half.
+
+During each iteration, we will select the leftmost element from the sorted half and discard that half from further consideration. Among all the selected elements, the minimum value will serve as our answer.
+
+To facilitate this process, we will declare a variable called ‘ans’ and initialize it with a large number. Then, at each step, after selecting the leftmost element from the sorted half, we will compare it with ‘ans’ and update ‘ans’ with the smaller value (i.e., min(ans, leftmost_element))
+
+
+int findMin(vector<int>& arr)
+{
+	// Write your code here.
+	int low = 0;
+	int high = arr.size()-1;
+	int mini = INT_MAX;
+	while(low<=high)
+	{
+		int mid = (low+high)/2;
+		if(arr[low]<=arr[mid]){
+			mini = min(mini,arr[low]);
+			low=mid+1;
+		}
+		else{
+			mini = min(mini,arr[mid]);
+			high = mid-1;
+		}
+	}
+	return mini;
+}
+
+Complexity Analysis
+Time Complexity: O(logN), N = size of the given array.
+Reason: We are basically using binary search to find the minimum.
+
+Space Complexity: O(1)
+Reason: We have not used any extra data structures, this makes space complexity, even in the worst case as O(1).
+
