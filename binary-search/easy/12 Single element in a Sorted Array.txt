@@ -1,0 +1,68 @@
+Search Single Element in a sorted array
+Problem Statement: Given an array of N integers. Every number in the array except one appears twice. Find the single number in the array.
+
+
+Example 1:
+Input Format: arr[] = {1,1,2,2,3,3,4,5,5,6,6}
+Result: 4
+Explanation: Only the number 4 appears once in the array.
+
+Example 2:
+
+Input Format: arr[] = {1,1,3,5,5}
+Result: 3
+Explanation: Only the number 3 appears once in the array.
+
+We are going to use the Binary Search algorithm to optimize the approach.
+
+The primary objective of the Binary Search algorithm is to efficiently determine the appropriate half to eliminate, thereby reducing the search space by half. It does this by determining a specific condition that ensures that the target is not present in that half.
+
+We need to consider 2 different cases while using Binary Search in this problem. Binary Search works by reducing the search space by half. So, at first, we need to identify the halves and then eliminate them accordingly. In addition to that, we need to check if the current element i.e. arr[mid] is the ‘single element’.
+
+If we can resolve these two cases, we can easily apply Binary Search in this algorithm.
+
+How to check if arr[mid] i.e. the current element is the single element:
+
+A crucial observation to note is that if an element appears twice in a sequence, either the preceding or the subsequent element will also be the same. But only for the single element, this condition will not be satisfied. So, to check this, the condition will be the following:
+
+If arr[mid] != arr[mid-1] and arr[mid] != arr[mid+1]: If this condition is true for arr[mid], we can conclude arr[mid] is the single element.
+The above condition will throw errors in the following 3 cases:
+
+If the array size is 1.
+If ‘mid’ points to 0 i.e. the first index.
+If ‘mid’ points to n-1 i.e. the last index.
+Note: At the start of the algorithm, we address the above edge cases without requiring separate conditions during the check for arr[mid] inside the loop. And the search space will be from index 1 to n-2 as indices 0 and n-1 have already been checked.
+
+Resolving edge cases:
+
+If n == 1: This means the array size is 1. If the array contains only one element, we will return that element only.
+If arr[0] != arr[1]: This means the very first element of the array is the single element. So, we will return arr[0].
+If arr[n-1] != arr[n-2]: This means the last element of the array is the single element. So, we will return arr[n-1].
+
+int singleNonDuplicate(vector<int>& arr)
+{
+	int n = arr.size()-1;
+	int low = 0;
+	int high = n;
+	if(n==1){return arr[0];}
+	if(arr[0]!=arr[1]){return arr[0];}
+	if(arr[n]!=arr[n-1]){return arr[n];}
+	low++;high--;
+	while(low<=high)
+	{
+		int mid = (low+high)/2;
+		if((arr[mid]!=arr[mid-1]) && (arr[mid]!=arr[mid+1])){
+			return arr[mid];
+		}
+		if((mid%2!=0 && arr[mid-1]==arr[mid]) || (mid%2==0 && arr[mid+1]==arr[mid])){
+			low=mid+1;
+		}
+		else{
+			high=mid-1;
+		}
+	}
+}
+Time Complexity: O(logN), N = size of the given array.
+Reason: We are basically using the Binary Search algorithm.
+
+Space Complexity: O(1) as we are not using any extra space.
