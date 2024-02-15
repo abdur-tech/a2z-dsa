@@ -1,0 +1,82 @@
+Find the Smallest Divisor Given a Threshold
+Problem Statement: You are given an array of integers ‘arr’ and an integer i.e. a threshold value ‘limit’. Your task is to find the smallest positive integer divisor, such that upon dividing all the elements of the given array by it, the sum of the division’s result is less than or equal to the given threshold value.
+
+Examples
+Example 1:
+Input Format: N = 5, arr[] = {1,2,3,4,5}, limit = 8
+Result: 3
+Explanation: We can get a sum of 15(1 + 2 + 3 + 4 + 5) if we choose 1 as a divisor. 
+The sum is 9(1 + 1 + 2 + 2 + 3)  if we choose 2 as a divisor. Upon dividing all the elements of the array by 3, we get 1,1,1,2,2 respectively. Now, their sum is equal to 7 <= 8 i.e. the threshold value. So, 3 is the minimum possible answer.
+
+Example 2:
+Input Format: N = 4, arr[] = {8,4,2,3}, limit = 10
+Result: 2
+Explanation: If we choose 1, we get 17 as the sum. If we choose 2, we get 9(4+2+1+2) <= 10 as the answer. So, 2 is the answer.
+
+
+
+Point to remember:
+
+
+While dividing the array elements with a chosen number, we will always take the ceiling value. And then we will consider their summation. For example, 3 / 2 = 2.
+
+Observation: 
+
+
+Minimum possible divisor: We can easily consider 1 as the minimum divisor as it is the smallest positive integer.
+Maximum possible divisor: If we observe, we can conclude the maximum element in the array i.e. max(arr[]) is the maximum possible divisor. Any number > max(arr[]), will give the exact same result as max(arr[]) does. This divisor will generate the minimum possible result i.e. n(1 for each element), where n = size of the array.
+
+With these observations, we can surely say that our answer will lie in the range 
+[1, max(arr[])].
+
+Optimal Approach
+Algorithm / Intuition
+Optimal Approach(Using Binary Search): 
+We are going to use the Binary Search algorithm to optimize the approach.
+
+The primary objective of the Binary Search algorithm is to efficiently determine the appropriate half to eliminate, thereby reducing the search space by half. It does this by determining a specific condition that ensures that the target is not present in that half.
+
+Now, we are not given any sorted array on which we can apply binary search. Upon closer observation, we can recognize that our answer space, represented as [1, max(arr[])], is actually sorted. Additionally, we can identify a pattern that allows us to divide this space into two halves: one consisting of potential answers and the other of non-viable options. So, we will apply binary search on the answer space.
+
+
+long long helper(vector<int>& arr,int ele){
+	long long divisor = 0;
+	for(int i = 0;i<arr.size();i++)
+	{
+		//cout<<divisor<<" ";
+		divisor+=ceil(((double)(arr[i]))/((double)(ele)));
+	}
+	return divisor;
+}
+
+int smallestDivisor(vector<int>& arr, int limit)
+{
+	int min_ele = INT_MAX;
+	int max_ele = INT_MIN;
+	for(auto it:arr){
+		min_ele = min(min_ele,it);
+		max_ele = max(max_ele,it);
+	}
+	int low = min_ele;
+	int high = max_ele;
+	int ans = -1;
+	while(low<=high)
+	{
+		int mid = (low+high)/2;
+		long long val = helper(arr,mid);
+		if(val<=limit)
+		{
+			high=mid-1;
+			ans=mid;
+		}
+		else{
+			low=mid+1;
+		}
+	}
+	return ans;
+}
+
+Time Complexity: O(log(max(arr[]))*N), where max(arr[]) = maximum element in the array, N = size of the array.
+Reason: We are applying binary search on our answers that are in the range of [1, max(arr[])]. For every possible divisor ‘mid’, we call the sumByD() function. Inside that function, we are traversing the entire array, which results in O(N).
+
+Space Complexity: O(1) as we are not using any extra space to solve this problem.

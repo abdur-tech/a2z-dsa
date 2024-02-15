@@ -1,0 +1,73 @@
+Nth Root of a Number using Binary Search
+Problem Statement: Given two numbers N and M, find the Nth root of M. The nth root of a number M is defined as a number X when raised to the power N equals M. If the ‘nth root is not an integer, return -1.
+
+Example 1:
+Input Format: N = 3, M = 27
+Result: 3
+Explanation: The cube root of 27 is equal to 3.
+
+Example 2:
+Input Format: N = 4, M = 69
+Result: -1
+Explanation: The 4th root of 69 does not exist. So, the answer is -1.
+
+Brute Force Approach
+
+We can guarantee that our answer will lie between the range from 1 to m i.e. the given number. So, we will perform a linear search on this range and we will find the number x, such that
+func(x, n) = m. If no such number exists, we will return -1.
+
+Note: func(x, n) returns the value of x raised to the power n i.e. xn.
+
+int _NthRoot(int n, int m) { //linear
+  
+    for(int i = 1;i<=m;i++){
+      long long val = pow(i,n);
+      if(val==m) return i;
+      else if (val>m) return -1;
+    }
+    return -1;
+}
+
+Time Complexity: O(M), M = the given number.
+Reason: Since we are using linear search, we traverse the entire answer space.
+
+Space Complexity: O(1) as we are not using any extra space.
+
+Optimal Approach
+
+Algorithm / Intuition
+Optimal Approach(Using Binary Search): 
+We are going to use the Binary Search algorithm to optimize the approach.
+
+The primary objective of the Binary Search algorithm is to efficiently determine the appropriate half to eliminate, thereby reducing the search space by half. It does this by determining a specific condition that ensures that the target is not present in that half.
+
+Now, we are not given any sorted array on which we can apply binary search. But, if we observe closely, we can notice that our answer space i.e. [1, n] is sorted. So, we will apply binary search on the answer space.
+
+int func(int mid,int n,int m){
+  long long ans = 1;
+  for(int i = 1;i<=n;i++){
+    ans = ans * mid;
+    if(ans>m) return 2;
+  }
+  if(ans==m) return 0;
+  if(ans<m) return 1;
+}
+int NthRoot(int n, int m) { //Binary_search
+  
+    int low = 1;
+    int high = m;
+    while(low<=high){
+      int mid = (low+high)/2;
+      long long val = func(mid,n,m);
+      if(val==0) return mid;
+      else if (val==1) low=mid+1;
+      else high=mid-1;
+    }
+    return -1;
+}
+
+Time Complexity: O(logN), N = size of the given array.
+Reason: We are basically using binary search to find the minimum.
+
+Space Complexity: O(1)
+Reason: We have not used any extra data structures, this makes space complexity, even in the worst case as O(1).

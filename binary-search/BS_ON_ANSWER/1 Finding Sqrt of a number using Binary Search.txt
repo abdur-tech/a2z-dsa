@@ -1,0 +1,93 @@
+Finding Sqrt of a number using Binary Search
+Problem Statement: You are given a positive integer n. Your task is to find and return its square root. If ‘n’ is not a perfect square, then return the floor value of ‘sqrt(n)’.
+
+Note: The question explicitly states that if the given number, n, is not a perfect square, our objective is to find the maximum number, x, such that x squared is less than or equal to n (x*x <= n). In other words, we need to determine the floor value of the square root of n.
+
+
+Example 1:
+Input Format: n = 36
+Result: 6
+Explanation: 6 is the square root of 36.
+
+Example 2:
+Input Format: n = 28
+Result: 5
+Explanation: Square root of 28 is approximately 5.292. So, the floor value will be 5.
+
+Brute Force Approach
+
+Algorithm / Intuition
+Naive Approach(Using linear search): 
+We can guarantee that our answer will lie between the range from 1 to n i.e. the given number. So, we will perform a linear search on this range and we will find the maximum number x, such that x*x <= n.
+
+
+int floorSqrt(int n) {
+    int ans = 0;
+    //linear search on the answer space:
+    for (long long i = 1; i <= n; i++) {
+        long long val = i * i;
+        if (val <= n * 1ll) {
+            ans = i;
+        } else {
+            break;
+        }
+    }
+    return ans;
+}
+Time Complexity: O(N), N = the given number.
+Reason: Since we are using linear search, we traverse the entire answer space.
+
+Space Complexity: O(1) as we are not using any extra space.
+
+Optimal Approach 1:
+
+A straightforward solution to this problem is to utilize the built-in sqrt() function. This approach doesn’t require any code implementation but serves as one of the possible solutions.
+
+
+int floorSqrt(int n) {
+    int ans = sqrt(n);
+    return ans;
+}
+
+Complexity Analysis
+Time Complexity: O(logN), N = size of the given array.
+Reason: We are basically using the Binary Search algorithm.
+
+Space Complexity: O(1) as we are not using any extra space.
+
+Algorithm / Intuition
+Optimal Approach(Using binary search): 
+We are going to use the Binary Search algorithm to optimize the approach.
+
+The primary objective of the Binary Search algorithm is to efficiently determine the appropriate half to eliminate, thereby reducing the search space by half. It does this by determining a specific condition that ensures that the target is not present in that half.
+
+Now, we are not given any sorted array on which we can apply binary search. But, if we observe closely, we can notice that our answer space i.e. [1, n] is sorted. So, we will apply binary search on the answer space.
+
+
+#include<bits/stdc++.h>
+int floorSqrt(int n)
+{
+    if(n==0) return 0;
+   int low = 1;
+   int high = n;
+   long long ans = 1;
+   while(low<=high){
+       long long  mid = (low+high)/2;
+       long long val = (mid*mid);
+       if (val <= n) {
+           ans=mid;
+           low=mid+1;
+       }
+       else{
+           high=mid-1;
+       }
+   }
+   return int(ans);
+}
+
+Complexity Analysis
+Time Complexity: O(logN), N = size of the given array.
+Reason: We are basically using the Binary Search algorithm.
+
+Space Complexity: O(1) as we are not using any extra space.
+
