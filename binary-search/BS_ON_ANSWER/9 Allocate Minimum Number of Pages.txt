@@ -1,0 +1,136 @@
+Allocate Minimum Number of Pages
+Problem Statement: Given an array ‘arr of integer numbers, ‘ar[i]’ represents the number of pages in the ‘i-th’ book. There are a ‘m’ number of students, and the task is to allocate all the books to the students.
+Allocate books in such a way that:
+
+Each student gets at least one book.
+Each book should be allocated to only one student.
+Book allocation should be in a contiguous manner.
+You have to allocate the book to ‘m’ students such that the maximum number of pages assigned to a student is minimum. If the allocation of books is not possible. return -1
+
+Examples
+Example 1:
+Input Format: n = 4, m = 2, arr[] = {12, 34, 67, 90}
+Result: 113
+Explanation: The allocation of books will be 12, 34, 67 | 90. One student will get the first 3 books and the other will get the last one.
+
+Example 2:
+Input Format: n = 5, m = 4, arr[] = {25, 46, 28, 49, 24}
+Result: 71
+Explanation: The allocation of books will be 25, 46 | 28 | 49 | 24.
+
+We can allocate books in several ways but it is clearly said in the question that we have to allocate the books in such a way that the maximum number of pages received by a student should be minimum.
+
+
+Assume the given array is {25 46 28 49 24} and number of students, M = 4. Now, we can allocate these books in different ways. Some of them are the following:
+
+
+25 | 46 | 28 | 49, 24  → Maximum no. of pages a student receive = 73
+25 | 46 | 28, 49 | 24  → Maximum no. of pages a student receive = 77
+25 | 46, 28 | 49 | 24  → Maximum no. of pages a student receive = 74
+25, 46 | 28 | 49 | 24  → Maximum no. of pages a student receive = 71
+
+From the above allocations, we can clearly observe that the minimum possible maximum number of pages is 71.
+
+Brute Force Approach
+Algorithm / Intuition
+Naive Approach: 
+The extremely naive approach is to check all possible pages from max(arr[]) to sum(arr[]). The minimum pages for which we can allocate all the books to M students will be our answer.
+
+
+
+#include <bits/stdc++.h>
+using namespace std;
+
+int countStudents(vector<int> &arr, int pages) {
+    int n = arr.size(); //size of array.
+    int students = 1;
+    long long pagesStudent = 0;
+    for (int i = 0; i < n; i++) {
+        if (pagesStudent + arr[i] <= pages) {
+            //add pages to current student
+            pagesStudent += arr[i];
+        }
+        else {
+            //add pages to next student
+            students++;
+            pagesStudent = arr[i];
+        }
+    }
+    return students;
+}
+
+int findPages(vector<int>& arr, int n, int m) {
+    //book allocation impossible:
+    if (m > n) return -1;
+
+    int low = *max_element(arr.begin(), arr.end());
+    int high = accumulate(arr.begin(), arr.end(), 0);
+
+    for (int pages = low; pages <= high; pages++) {
+        if (countStudents(arr, pages) == m) {
+            return pages;
+        }
+    }
+    return low;
+}
+
+Time Complexity: O(N * (sum(arr[])-max(arr[])+1)), where N = size of the array, sum(arr[]) = sum of all array elements, max(arr[]) = maximum of all array elements.
+Reason: We are using a loop from max(arr[]) to sum(arr[]) to check all possible numbers of pages. Inside the loop, we are calling the countStudents() function for each number. Now, inside the countStudents() function, we are using a loop that runs for N times.
+
+Space Complexity:  O(1) as we are not using any extra space to solve this problem.
+
+Optimal Approach
+Algorithm / Intuition
+Optimal Approach: 
+We are going to use the Binary Search algorithm to optimize the approach.
+
+The primary objective of the Binary Search algorithm is to efficiently determine the appropriate half to eliminate, thereby reducing the search space by half. It does this by determining a specific condition that ensures that the target is not present in that half.
+
+Upon closer observation, we can recognize that our answer space, represented as [max(arr[]), sum(arr[])], is actually sorted. Additionally, we can identify a pattern that allows us to divide this space into two halves: one consisting of potential answers and the other of non-viable options. So, we will apply binary search on the answer space.
+
+
+#include <bits/stdc++.h>
+using namespace std;
+
+int countStudents(vector<int> &arr, int pages) {
+    int n = arr.size(); //size of array.
+    int students = 1;
+    long long pagesStudent = 0;
+    for (int i = 0; i < n; i++) {
+        if (pagesStudent + arr[i] <= pages) {
+            //add pages to current student
+            pagesStudent += arr[i];
+        }
+        else {
+            //add pages to next student
+            students++;
+            pagesStudent = arr[i];
+        }
+    }
+    return students;
+}
+
+int findPages(vector<int>& arr, int n, int m) {
+    //book allocation impossible:
+    if (m > n) return -1;
+
+    int low = *max_element(arr.begin(), arr.end());
+    int high = accumulate(arr.begin(), arr.end(), 0);
+    while (low <= high) {
+        int mid = (low + high) / 2;
+        int students = countStudents(arr, mid);
+        if (students > m) {
+            low = mid + 1;
+        }
+        else {
+            high = mid - 1;
+        }
+    }
+    return low;
+}
+
+
+Time Complexity: O(N * log(sum(arr[])-max(arr[])+1)), where N = size of the array, sum(arr[]) = sum of all array elements, max(arr[]) = maximum of all array elements.
+Reason: We are applying binary search on [max(arr[]), sum(arr[])]. Inside the loop, we are calling the countStudents() function for the value of ‘mid’. Now, inside the countStudents() function, we are using a loop that runs for N times.
+
+Space Complexity:  O(1) as we are not using any extra space to solve this problem.

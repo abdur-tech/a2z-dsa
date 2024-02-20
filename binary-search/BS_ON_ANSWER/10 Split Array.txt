@@ -1,0 +1,107 @@
+Split Array – Largest Sum
+Problem Statement: Given an integer array ‘A’ of size ‘N’ and an integer ‘K’. Split the array ‘A’ into ‘K’ non-empty subarrays such that the largest sum of any subarray is minimized. Your task is to return the minimized largest sum of the split.
+A subarray is a contiguous part of the array.
+
+Examples
+Example 1:
+Input Format: N = 5, a[] = {1,2,3,4,5}, k = 3
+Result: 6
+Explanation: There are many ways to split the array a[] into k consecutive subarrays. The best way to do this is to split the array a[] into [1, 2, 3], [4], and [5], where the largest sum among the three subarrays is only 6.
+
+Example 2:
+Input Format: N = 3, a[] = {3,5,1}, k = 3
+Result: 5
+Explanation: There is only one way to split the array a[] into 3 subarrays, i.e., [3], [5], and [1]. The largest sum among these subarrays is 5.
+
+Algorithm / Intuition
+Naive Approach: 
+The extremely naive approach is to check all possible answers from max(arr[]) to sum(arr[]). The minimum value for which we can make k subarrays will be our answer.
+
+#include <bits/stdc++.h>
+using namespace std;
+
+int countPartitions(vector<int> &a, int maxSum) {
+    int n = a.size(); //size of array.
+    int partitions = 1;
+    long long subarraySum = 0;
+    for (int i = 0; i < n; i++) {
+        if (subarraySum + a[i] <= maxSum) {
+            //insert element to current subarray
+            subarraySum += a[i];
+        }
+        else {
+            //insert element to next subarray
+            partitions++;
+            subarraySum = a[i];
+        }
+    }
+    return partitions;
+}
+
+int largestSubarraySumMinimized(vector<int> &a, int k) {
+    int low = *max_element(a.begin(), a.end());
+    int high = accumulate(a.begin(), a.end(), 0);
+
+    for (int maxSum = low; maxSum <= high; maxSum++) {
+        if (countPartitions(a, maxSum) == k)
+            return maxSum;
+    }
+    return low;
+}
+Complexity Analysis
+Time Complexity: O(N * (sum(arr[])-max(arr[])+1)), where N = size of the array, sum(arr[]) = sum of all array elements, max(arr[]) = maximum of all array elements.
+Reason: We are using a loop from max(arr[]) to sum(arr[]) to check all possible values of time. Inside the loop, we are calling the countPartitions() function for each number. Now, inside the countPartitions() function, we are using a loop that runs for N times.
+
+Space Complexity:  O(1) as we are not using any extra space to solve this problem.
+
+Optimal Approach
+Algorithm / Intuition
+Optimal Approach(Using Binary Search): 
+We are going to use the Binary Search algorithm to optimize the approach.
+
+The primary objective of the Binary Search algorithm is to efficiently determine the appropriate half to eliminate, thereby reducing the search space by half. It does this by determining a specific condition that ensures that the target is not present in that half.
+
+Upon closer observation, we can recognize that our answer space, represented as [max(arr[]), sum(arr[])], is actually sorted. Additionally, we can identify a pattern that allows us to divide this space into two halves: one consisting of potential answers and the other of non-viable options. So, we will apply binary search on the answer space.
+
+#include<bits/stdc++.h>
+int possible(vector<int> &a, int split_len,int k)
+{
+    int sum_arr = 0;
+    int cnt = 1;
+    for(int i =0;i<a.size();i++)
+    {                             // i 4
+        if(a[i]+sum_arr<=split_len) //cnt 2 sum 4
+        {
+            sum_arr+=a[i];
+        }
+        else{
+            cnt++;
+            sum_arr=a[i];
+        }
+    }
+    return cnt;
+}
+
+int largestSubarraySumMinimized(vector<int> a, int k) {
+    // Write Your Code Here
+    if(k>a.size()) return -1;
+    int low = *max_element(a.begin(),a.end());
+    int high = accumulate(a.begin(),a.end(),0);
+    while(low<=high){
+        int mid = (low+high)/2;
+        int split_len = possible(a, mid, k);
+        if(split_len>k){
+            low=mid+1;
+        }
+        else{
+             high=mid-1;
+        }
+    }
+    return low;
+}
+
+Complexity Analysis
+Time Complexity: O(N * log(sum(arr[])-max(arr[])+1)), where N = size of the array, sum(arr[]) = sum of all array elements, max(arr[]) = maximum of all array elements.
+Reason: We are applying binary search on [max(arr[]), sum(arr[])]. Inside the loop, we are calling the countPartitions() function for the value of ‘mid’. Now, inside the countPartitions() function, we are using a loop that runs for N times.
+
+Space Complexity:  O(1) as we are not using any extra space to solve this problem.
