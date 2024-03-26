@@ -1,0 +1,74 @@
+Reverse Words in a String
+Problem Statement: Given a string s, reverse the words of the string.
+
+Examples:
+
+Example 1:
+Input: s=”this is an amazing program”
+Output: “program amazing an is this”
+
+Example 2:
+Input: s=”This is decent”
+Output: “decent is This”
+
+
+method 1: this one is working , but time limit exceed error is comming
+string _reverseString(string &str){
+
+    string temp="";
+    string ans="";
+    for(int i=0 ;i<str.length();i++){
+        char x=str[i];
+        if(x !=' '){
+            temp+=x;
+        }else if(x ==' '){
+
+            if(ans==""){
+           ans=temp;        
+            }else{
+                if(temp!=""){
+                ans=temp+" "+ans;
+                }
+    
+            }
+        temp="";
+        } 
+    }
+    if(temp!=""){
+ans=temp+' '+ans;
+    }
+    return ans;
+}
+
+
+2nd method :- through stringstream method
+
+
+string reverseString(string &str) {
+    // Create a stringstream to handle the string processing
+    
+    stringstream ss(str);
+
+    vector<string> words;
+
+    string word;
+
+    // Read words from stringstream and reverse them
+    while (ss >> word) {
+        words.push_back(word);
+    }
+
+    // Reconstruct the string with reversed words
+    string output;
+    for (int i = words.size() - 1; i >= 0; --i) {
+        output += words[i];
+        if (i > 0) {
+            output += ' ';
+        }
+    }
+
+    // Update the input string
+    str = output;
+
+    return str;
+}

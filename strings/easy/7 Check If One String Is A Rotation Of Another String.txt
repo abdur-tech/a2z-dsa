@@ -1,0 +1,29 @@
+Check If One String Is A Rotation Of Another String
+
+Problem statement
+You are given two Strings 'P' and 'Q' of equal length.
+
+
+
+Your task is to return 1 if String 'P' can be converted into String 'Q' by cyclically rotating it to the right any number of times ( Possibly Zero ), else return 0.
+
+
+
+A cyclic rotation to the right on String 'A' consists of taking String 'A' and moving the rightmost character to the leftmost position. For example, if 'A' = "pqrst", then it will be "tpqrs" after one cyclic rotation on 'A'.
+
+
+
+For example:
+Consider the two strings 'P' = "abfyg" and 'Q' = "gabfy" 
+
+If we cyclically rotate String 'P' to the right once. The resulting string P becomes "gabfy" which is equal to String 'Q'. 
+
+Therefore it is possible to convert String 'P' to String 'Q'.
+
+int isCyclicRotation(string &p, string &q) 
+{
+    if((p+p).find(q)!=string::npos && p.length()==q.length()) return true;
+    return false;
+}
+TC -> O(2N)
+SC-> O(1)

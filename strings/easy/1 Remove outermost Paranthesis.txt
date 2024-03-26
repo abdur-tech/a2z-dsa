@@ -1,0 +1,34 @@
+Maximum Nesting Depth Of The Parentheses
+
+Problem statement
+You are given a string 'S' of length 'N' representing an integer.
+
+Given a valid parentheses string ‘S’, you must return the nesting depth of the string ‘S’.
+
+Example:
+
+Input:
+S = '1+(3*6+(9-3))', N=13
+Output: 2
+
+Explanation: The digits 9 and 3 are inside of 2 nested parentheses. Hence we return 2.
+
+Code
+
+int maxDepth(string s) {
+	int n = s.length();
+	int cnt = 0;
+	int max_cnt=-1;
+	for(int i = 0;i<n;i++)
+	{
+		if(s[i]=='(') cnt++;
+		else if (s[i] == ')') {
+			cnt--;
+		}
+		max_cnt = max(cnt, max_cnt);
+        }
+	return max_cnt;
+}
+
+TC -> O(N)
+SC->O(1)
