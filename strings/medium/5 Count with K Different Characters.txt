@@ -1,0 +1,111 @@
+Count With K Different Characters
+
+Refer -> https://www.youtube.com/watch?v=akwRFY2eyXs&ab_channel=CodewithAlisha
+
+Problem statement
+You are given a string 'str' of lowercase alphabets and an integer 'k' .
+
+
+
+Your task is to return the count all the possible substrings that have exactly 'k' distinct characters.
+
+
+
+For example:
+
+'str' = abcad and 'k' = 2. 
+
+We can see that the substrings {ab, bc, ca, ad} are the only substrings with 2 distinct characters. 
+
+Therefore, the answer will be 4.    
+
+
+Sample Input 1 :
+aacfssa    
+3
+Sample Output 1 :
+5    
+Explanation of The Sample Input 1:
+Given 'str' = “aacfssa”. We can see that the substrings with only 3 distinct characters are {aacf, acf, cfs, cfss, fssa}. 
+
+Therefore, the answer will be 5.
+Sample Input 2 :
+qffds
+4
+Sample Output 2 :
+1
+Constraints:
+1 <= |str| <= 10^5
+1 <= k <= 26
+
+Time Limit: 1 second
+
+
+
+Approach 1 ->
+
+int _countSubStrings(string str, int k) 
+
+{    
+    int n = str.length();
+    int cnt = 0;
+    for(int i = 0;i<n;i++)
+    {
+        vector<int> m(26,0);
+        int dist = 0;
+        for(int j = i;j<n;j++)
+        {
+            if(m[str[j]-'a']==0){
+                dist++;
+            }
+            m[str[j]-'a']++;
+            if(dist==k) cnt++;
+            if(dist>k) break;
+        }
+    }
+    return cnt;
+}
+
+O(N2)
+O(N)
+
+
+Approach 2 -> using formula
+
+
+//https://www.youtube.com/watch?v=akwRFY2eyXs&ab_channel=CodewithAlisha
+int atmost(string str,int k)
+{
+    int i = 0;
+    int j = 0;
+    vector<int> v(26,0);
+    int cnt = 0;
+    int dist = 0;
+    int n = str.length();
+    while(i<n)
+    {
+        if(v[str[i]-'a']==0)
+        {
+            dist++;
+        }
+       v[str[i]-'a']++;
+
+        while(dist>k)
+        {
+            v[str[j]-'a']--;
+            if(v[str[j]-'a']==0)
+            {
+                dist--;
+            }
+            j++;
+        }
+       cnt+=i-j+1;
+        i++;
+    }
+    return cnt;
+}
+int countSubStrings(string str, int k) 
+
+{    
+   return atmost(str,k) - atmost(str,k-1);
+}

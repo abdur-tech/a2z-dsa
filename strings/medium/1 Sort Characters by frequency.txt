@@ -1,0 +1,44 @@
+ Sorting Characters By Frequency
+
+ Problem statement
+You have been given a string ‘S’.
+
+
+
+You must return the string ‘S’ sorted in decreasing order based on the frequency of characters.
+
+If there are multiple answers, return any of them.
+
+
+
+Example :
+Let 'S'= “abAb”. 
+
+Here the characters ‘a’ and ‘A’ have frequency 1 and character ‘b’ has frequency ‘2’.  
+
+Therefore the sorted string is “bbAa”. 
+
+string sortByFrequency(int n, string& s)
+{
+	// Take a Map to store char with count. 
+
+map < char , int > mp;
+for(int i = 0; i < n; i++) {
+        mp[s[i]]++; 
+}
+// make a string to store characters.
+string str="";
+
+for(auto it:mp)
+{
+	for(int i = 0;i<it.second;i++)
+	{
+		str+=it.first;
+	}
+}
+
+    return str; 
+}
+
+O(NlogN)
+O(N)
