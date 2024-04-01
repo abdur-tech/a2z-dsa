@@ -1,0 +1,77 @@
+ Reverse Words
+
+ Problem statement
+You are given a string 'str' of length 'n'. You need to reverse the string word by word and return it.
+
+
+
+Note:
+Please note that there can be multiple spaces between two words, as well as leading or trailing spaces. 
+However, in the reversed string output, there should only be a single space between two words, and the reversed string should not contain any leading or trailing spaces.
+
+
+Example :
+Input: 'str' = "Welcome to Coding Ninjas"
+
+Output: Ninjas Coding to Welcome
+
+Explanation:
+If the given input string is "Welcome to Coding Ninjas", then you should return "Ninjas Coding to Welcome" as the reversed string
+
+Sample Input 1 :
+Welcome to Coding Ninjas
+
+
+Sample Output 1:
+Ninjas Coding to Welcome
+
+
+Explanation of Sample Input 1:
+The given input is "Welcome to Coding Ninjas". To obtain the desired output, we need to reverse the string and remove any leading or trailing spaces. 
+
+The output is "Ninjas Coding to Welcome", where there is only a single space between two words and no leading or trailing spaces.
+
+
+Sample Input 2 :
+   I am a star
+
+
+Sample Output 2:
+star a am I
+
+string revWords(string str) {
+    int n = str.length();
+    //removing leading space
+    int i = 0;
+    while(i<n && str[i]==' '){
+        i++;
+    }
+    string ans="";
+    string temp="";
+    while(i<n)
+    {
+        char x = str[i];
+        if(x!=' ')
+        {
+            temp+=x;
+        }
+        else if(x==' ')
+        {
+            if(ans==""){
+                ans=temp;
+            }
+            else
+            {
+                if (temp != "") {
+                  ans = temp + ' ' + ans;
+                }
+            }
+            temp="";
+           
+        }
+        i++;
+    }
+    if(temp!="") ans = temp+' '+ans;
+    return ans;
+}
+

@@ -1,0 +1,70 @@
+Problem statement
+A doubly-linked list is a data structure that consists of sequentially linked nodes, and the nodes have reference to both the previous and the next nodes in the sequence of nodes.
+
+
+
+Given a doubly-linked list, delete the node at the end of the doubly linked list.
+
+
+
+Note:
+You need not print anything. You’re given the head of the linked list, just return the head of the modified list.
+
+
+Example:
+Input: Linked List:  4 <-> 10 <-> 3 <-> 5 <-> 20
+
+Output: Modified Linked List: 4 <-> 10 <-> 3 <-> 5
+
+Explanation: The last node having ‘data’ = 20 is removed from the linked list.
+
+Sample Input 1:
+5
+4 10 3 5 20
+
+
+Sample Output 1:
+4 10 3 5 NULL
+
+
+Explanation Of Sample Input 1 :
+The last node having ‘data’ = 20 is removed from the linked list.
+
+
+Sample Input 2 :
+1
+5
+
+
+Sample Output 2 :
+NULL
+
+
+Explanation Of Sample Input 2 :
+The linked list has only one node, so the modified linked list is empty.
+
+
+Expected time complexity :
+The expected time complexity is O(N).
+
+
+Constraints:
+1 <= ‘N’ <= 100000
+1 <= Data of a node in linked list <= 10^9
+
+Time limit: 1 second
+
+Node * deleteLastNode(Node *head) {
+    Node* temp = head;
+    if(temp->next==NULL) return NULL;
+    while(temp->next->next)
+    {
+        temp=temp->next;
+    }
+    delete temp->next;
+    temp->next=nullptr;
+    return head;
+}
+
+
+
