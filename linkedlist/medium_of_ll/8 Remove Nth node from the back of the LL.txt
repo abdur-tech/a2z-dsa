@@ -1,0 +1,87 @@
+Remove N-th node from the end of a Linked List
+
+Problem Statement: Given a linked list and an integer N, the task is to delete the Nth node from the end of the linked list and print the updated linked list.
+
+
+Example 1:
+
+Input Format: 5->1->2, N=2
+
+Result: 5->2
+
+
+Example 2:
+
+Input Format: 1->2->3->4->5, N=3
+
+Result: 1->2->4->5
+
+Explanation: The 3rd node from the end is 3, therefore, we remove 3 from the linked list.
+
+Brute Force Approach
+
+// O(N)+O(L-N) // O(1)
+Node* _removeKthNode(Node* head, int K)
+{
+    int len = 0;
+    Node* curr = head;
+    while(curr){
+        len++;
+        curr=curr->next;
+    }
+    if(len==K)
+    {
+        return head->next;
+    }
+    int curr_k = len - K;
+    curr=head;
+    len=0;
+    while(curr){
+        len++;
+        if(len==curr_k){
+            curr->next=curr->next->next;
+        }
+        curr=curr->next;
+    }
+    return head;
+}
+
+Complexity Analysis
+Time Complexity: O(L)+O(L-N), We are calculating the length of the linked list and then iterating up to the (L-N)th node of the linked list, where L is the total length of the list.
+
+Space Complexity:  O(1), as we have not used any extra space.
+
+Optimal Approach
+Algorithm / Intuition
+The brute force, in the worst case, has a time complexity of O(2*L), where L is the length of the linked list. Therefore, it is not the most efficient algorithm, as we are traversing the entire list twice.
+
+To enhance efficiency, we will involve two pointers, a fast pointer and a slow pointer. The fast-moving pointer will initially be exactly N nodes ahead of the slow-moving pointer. After which, both of them will move one step at a time. When the fast pointer reaches the last node, i.e., the L-th node, the slow is guaranteed to be at the (L-N)-th node, where L is the total length of the linked list.
+
+
+Node* removeKthNode(Node* head, int K)
+{
+    int len = 0;
+    Node* fast = head;
+    while(fast)
+    {
+       
+        if(len==K) break;
+         len++;
+        fast=fast->next;
+    }
+    if(fast==nullptr) return head->next;
+    Node* slow = head;
+    while(fast->next){
+        slow=slow->next;
+        fast=fast->next;
+    }
+    Node* deleteNode = slow->next;
+    slow->next = slow->next->next;
+    delete deleteNode;
+    return head;
+}
+
+Time Complexity: O(N) since the fast pointer will traverse the entire linked list, where N is the length of the linked list.
+
+Space Complexity: O(1), as we have not used any extra space.
+

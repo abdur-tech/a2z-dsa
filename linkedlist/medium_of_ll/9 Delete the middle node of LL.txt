@@ -1,0 +1,48 @@
+Delete Middle Node
+
+Problem statement
+
+Given a singly linked list of 'N' nodes. Your task is to delete the middle node of this list and return the head of the modified list.
+
+However, if the list has an even number of nodes, we delete the second middle node
+
+Example:
+If given linked list is 1->2->3->4 then it should be modified to 1->2->4.
+
+Sample Input 1 :
+5
+1 2 3 4 5
+Sample Output 1 :
+1 2 4 5 
+Explanation to Sample Input 1 :
+We can clearly see that there are 5 nodes in the linked list therefore the middle node is the node with value '3'.
+Sample Input 2 :
+1
+2
+Sample Output 2 :
+-1
+Explanation to Sample Input 1 :
+We can clearly see that there is only one node in the linked list.
+Therefore, after deleting that one node, the linked list becomes empty, resulting in an output of -1.
+
+
+
+// it will work for both odd and even linked list
+// for even, fast will go to nullptr
+// for odd , fast will go to last node
+
+Node* deleteMiddle(Node* head){
+
+    if(head == NULL || head->next == NULL) return NULL;
+    Node* slow = head;
+    Node* fast = head;
+    fast = fast->next->next; // why we are doing this, we don't need exact middle, we need before middle node, then only we will able to delete middle;
+    while(fast != NULL && fast->next != NULL){
+        slow = slow->next;
+        fast = fast->next->next;
+    }
+    Node* middle = slow->next;
+    slow->next = slow->next->next;
+    delete middle;
+    return head;
+}

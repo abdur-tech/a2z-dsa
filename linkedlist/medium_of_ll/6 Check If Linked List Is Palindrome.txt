@@ -1,0 +1,55 @@
+Check If Linked List Is Palindrome
+
+Problem statement
+You are given a Singly Linked List of integers. You have to return true if the linked list is palindrome, else return false.
+
+
+
+A Linked List is a palindrome if it reads the same from left to right and from right to left.
+
+
+
+Example:
+The lists (1 -> 2 -> 1), (3 -> 4 -> 4-> 3), and (1) are palindromes, while the lists (1 -> 2 -> 3) and (3 -> 4) are not.
+
+Node* reverse(Node* head)
+{
+    Node* prev = nullptr;
+    while(head!=NULL)
+    {
+        Node* next = head->next;
+        head->next = prev;
+        prev = head;
+        head = next;
+    }
+    return prev;
+}
+bool isPalindrome(Node *head)
+{
+   if(head->next==NULL) return true;
+   Node* slow = head;
+   Node* fast = head;
+   while(fast->next && fast->next->next)
+   {
+       slow=slow->next;
+       fast=fast->next->next;
+   }
+   slow->next = reverse(slow->next);
+   slow = slow->next;
+   fast=head;
+   while(slow->next)
+   {
+       if(fast->data!=slow->data){
+           return false;
+       }
+       slow=slow->next;
+       fast=fast->next;
+   }
+   return true;
+
+}
+
+Time Complexity: O (2* N) The algorithm traverses the linked list twice, dividing it into halves. During the first traversal, it reverses one-half of the list, and during the second traversal, it compares the elements of both halves. As each traversal covers N/2 elements, the time complexity is calculated as O(N/2 + N/2 + N/2 + N/2), which simplifies to O(2N), ultimately representing O(N). 
+
+Space Complexity: O(1) The approach uses a constant amount of additional space regardless of the size of the input linked list. It doesn't allocate any new data structures that depend on the input size, resulting in a space complexity of O(1).
+
