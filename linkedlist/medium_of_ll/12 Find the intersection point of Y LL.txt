@@ -1,0 +1,39 @@
+Find intersection of Two Linked Lists
+
+
+13
+
+0
+Problem Statement: Given the heads of two singly linked-lists headA and headB, return the node at which the two lists intersect. If the two linked lists have no intersection at all, return null.
+
+Examples:
+
+Example 1:
+Input:
+List 1 = [1,3,1,2,4], List 2 = [3,2,4]
+Output:
+2
+Explanation: Here, both lists intersecting nodes start from node 2.
+
+
+
+
+Node* findIntersection(Node *firstHead, Node *secondHead)
+{
+    if(firstHead==nullptr || secondHead==nullptr) return nullptr;
+    Node* first = firstHead;
+    Node* second = secondHead;
+    while(first!=second)
+    {
+        first=first==nullptr?secondHead:first->next;
+        second=second==nullptr?firstHead:second->next;
+    }
+    return first;
+}
+
+
+Time Complexity: O(2*max(length of list1,length of list2))
+
+Reason: Uses the same concept of the difference of lengths of two lists.
+
+Space Complexity: O(1)

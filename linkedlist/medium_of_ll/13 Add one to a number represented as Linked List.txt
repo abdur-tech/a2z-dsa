@@ -1,0 +1,84 @@
+Add one to a number represented as Linked List
+
+Problem statement
+You're given a positive integer represented in the form of a singly linked-list of digits. The length of the number is 'n'.
+
+
+
+Add 1 to the number, i.e., increment the given number by one.
+
+
+
+The digits are stored such that the most significant digit is at the head of the linked list and the least significant digit is at the tail of the linked list.
+
+
+
+Example:
+Input: Initial Linked List: 1 -> 5 -> 2
+
+Output: Modified Linked List: 1 -> 5 -> 3
+
+Explanation: Initially the number is 152. After incrementing it by 1, the number becomes 153.
+
+Sample Input 1:
+3
+1 5 2
+
+
+Sample Output 1:
+1 5 3
+
+
+Explanation For Sample Input 1:
+Initially the number is 152. After incrementing it by 1, the number becomes 153.
+
+
+Sample Input 2:
+2
+9 9
+
+
+Sample Output 2:
+1 0 0
+
+
+Explanation For Sample Input 2:
+Initially the number is 9. After incrementing it by 1, the number becomes 100. Please note that there were 2 nodes in the initial linked list, but there are three nodes in the sum linked list.
+
+
+Expected time complexity :
+The expected time complexity is O('n').
+
+
+int helper(Node* head)
+{
+    if(head==NULL)
+    {
+        return 1;
+    }
+    int carry = helper(head->next);
+    int ans = head->data + carry;
+    if(ans==10)
+    {
+        head->data=0;
+        return 1; //return carry as one
+    }
+    else{
+        head->data=ans;
+        return 0;   //return carry as 0
+    }
+    
+}
+Node *addOne(Node *head)
+{
+    int carry = helper(head);
+    if(carry==1){
+        Node* newhead = new Node(1);
+        newhead->next=head;
+        return newhead;
+    }
+    return head;
+}
+
+TC -> O(N)
+Sc -> O(N) because it is recursion
