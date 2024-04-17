@@ -1,0 +1,101 @@
+ Find pairs with given sum in doubly linked list
+
+ Problem statement
+A doubly-linked list is a data structure that consists of sequentially linked nodes, and the nodes have reference to both the previous and the next nodes in the sequence of nodes.
+
+
+
+You are given a sorted doubly linked list of size 'n', consisting of distinct positive integers, and a number 'k'.
+
+
+
+Find out all the pairs in the doubly linked list with sum equal to 'k'.
+
+
+
+Example :
+Input: Linked List: 1 <-> 2 <-> 3 <-> 4 <-> 9 and 'k' = 5
+
+Output: (1, 4) and (2, 3)
+
+Explanation: There are 2 pairs in the linked list having sum 'k' = 5.
+Detailed explanation ( Input/output format, Notes, Images )
+Sample input 1:
+5
+1 2 3 4 9
+5
+
+
+Sample output 1
+2
+1 4
+2 3
+
+
+Explanation for sample input 1 :
+There are 2 pairs in the linked list having sum equal to 'k' (= 5).
+
+
+Sample input 2:
+5
+1 10 11 12 27
+7
+
+
+Sample output 2:
+0
+
+
+Explanation for sample output 2
+There is no pair in the linked list with sum equal to 'k' (= 7).
+
+
+Expected time complexity :
+The expected time complexity is O('n').
+
+
+Constraints:
+2 <= 'n' <= 10 ^ 4
+1 <= 'data' in any node <= 10 ^ 4
+1 <= 'k' <= 10 ^ 4
+
+'data' in every node is distinct.
+
+Time limit: 1 second
+
+
+
+#include<bits/stdc++.h>
+vector<pair<int, int>> findPairs(Node* head, int k)
+{
+    vector<pair<int,int>>ans;
+    Node* p=head;
+    Node* q=head;
+    while(q->next!=NULL)
+    {
+        q=q->next;
+    }
+    while((p->data)<(q->data))
+    {
+        int sum=p->data+q->data;
+        if(sum==k)
+        {
+            ans.push_back(make_pair(p->data,q->data));
+            p=p->next;
+            q=q->prev;
+        }
+        else if(sum<k)
+        {
+            p=p->next;
+        }
+        else
+        {
+            q=q->prev;
+        }
+    }
+return ans;
+}
+
+
+O(N)
+O(1)
