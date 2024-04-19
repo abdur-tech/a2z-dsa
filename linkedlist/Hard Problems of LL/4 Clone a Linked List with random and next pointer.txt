@@ -1,0 +1,86 @@
+Clone Linked List with Random and Next Pointer
+
+
+9
+
+0
+In this article we will solve the most asked coding interview problem "Clone Linked List".
+
+Problem Statement: Given a Linked list that has two pointers in each node and one of which points to the first node and the other points to any random node. Write a program to clone the LinkedList.
+
+Example 1:
+
+Input:
+	head = [[1,3],[2,0],[3,null],[4,1]]
+Output:
+	head = [[1,3],[2,0],[3,null],[4,1]]
+
+Solution 1: Brute Force
+Approach:
+We will use a hash-map for keeping track of deep copies of every node.
+
+Iterate through the entire list.
+For each node, create a deep copy of each node and hash it with it. Store it in the hashmap.
+Now, again iterate through the given list. For each node, link the deep node present as the hash value of the original node as per original node. 
+the head of the deep copy list will be the head of hashed value of original node.
+
+Time Complexity: O(N)+O(N)
+
+Reason: Two iterations over the entire list. Once for inserting in the map and other for linking nodes with next and random pointer.
+
+Space Complexity: O(N)
+
+Reason: Use of hashmap for storing entire data.
+
+Solution 2: Optimized
+Approach:
+The optimisation will be in removing the extra spaces, i.e, the hashmap used in brute force. This approach can be broken down into three steps. 
+
+Create deep nodes of all nodes. Instead of storing these nodes in a hashmap, we will point it to the next of the original nodes.
+Take a pointer, say itr, point it to the head of the list. This will help us to point random pointers as per the original list. This can be achieved by itr->next->random = itr->random->next
+Use three pointers. One dummy node whose next node points to the first deep node. itr pointer at the head of the original list and fast which is two steps ahead of the itr. This will be used to separate the original linked list with the deep nodes list.
+
+Code:
+
+
+Node *cloneLL(Node *head){
+	if(!head) return nullptr;
+	Node* itr = head;
+	Node* front = head;
+
+	while(itr)
+	{
+		front = itr->next;
+		Node* newNode = new Node(itr->data);
+		itr->next = newNode;
+		newNode->next = front;
+		itr = front;
+	}
+	itr=head;
+	while(itr)
+	{
+		if(itr->random)
+		{
+			itr->next->random = itr->random->next;
+		}
+		itr=itr->next->next;
+	}
+
+	Node* newHead = new Node(-1);
+	Node* copy = newHead;
+	itr=head;
+	while(itr)
+	{
+		copy->next = itr->next;
+		front = itr->next->next;
+		itr->next = front;
+		copy = copy->next;
+		itr=front;
+	}
+	return newHead->next;
+}
+
+
+
+O(3N)
+O(1)

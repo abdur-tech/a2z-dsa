@@ -1,0 +1,70 @@
+Problem statement
+You are given a linked list containing 'n' 'head' nodes, where every node in the linked list contains two pointers:
+
+
+
+(1) ‘next’ which points to the next node in the list
+
+(2) ‘child’ pointer to a linked list where the current node is the head.
+
+
+
+Each of these child linked lists is in sorted order and connected by 'child' pointer.
+
+
+
+Your task is to flatten this linked such that all nodes appear in a single layer or level in a 'sorted order'.
+
+
+Examples:
+
+Example 1:
+Input:
+Number of head nodes = 4
+Array holding length of each list with head and bottom = [4,2,3,4]
+Elements of entire linked list = [5,7,8,30,10,20,19,22,50,28,35,40,45]
+
+Node* mergeTwoLL(Node* head1,Node* head2)
+{
+	if(head1==nullptr) return head2;
+	if(head2==nullptr) return head1;
+	if(head1->data>head2->data)
+	{
+		swap(head1,head2);
+	}
+	Node* dummyNode = new Node(-1);
+	Node* temp = dummyNode;
+	while(head1 && head2)
+	{
+		if(head1->data < head2->data)
+		{
+			temp->child = head1;
+			temp = temp->child;
+			head1=head1->child;
+		}
+		else{
+			temp->child = head2;
+			temp = temp->child;
+			head2=head2->child;
+		}
+	}
+	if(head1) temp->child=head1;
+	if(head2) temp->child = head2;
+	return dummyNode->child;
+}
+Node* flattenLinkedList(Node* head) 
+{
+	if(head==nullptr){
+		return head;
+	}
+	Node* right = head->next;
+	Node* down = head;
+	down->next = nullptr;
+	right = flattenLinkedList(right);
+	Node* ans = mergeTwoLL(down, right);
+	return ans;
+}
+
+
+O(N)
+O(1)
