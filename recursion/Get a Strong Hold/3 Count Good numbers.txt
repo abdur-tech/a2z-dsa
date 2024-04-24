@@ -1,0 +1,54 @@
+Good Numbers
+
+Problem statement
+A number is called good if it's every digit (except the rightmost digit) is larger than the sum of digits on the right side of that digit.
+
+
+
+Find all the good numbers in the range from 'a' to 'b' (both inclusive), such that none of them contains 'digit' as a digit.
+
+
+
+Example :
+Input: 'a' = 840, 'b' = 850 and 'digit' = 6
+
+Output: Good numbers = [840, 841, 842, 843, 850]
+
+Explanation: Consider 841:
+8 > (4 + 1)
+4 > 1
+Since each digit is greater than the sum of digits on right (except 1, which does not have any digit on its right), 841 is a good number. Similarly, all these numbers are good.
+
+
+#include <bits/stdc++.h>
+bool check(int n,int digit,int sum)
+{
+    if(n==0)
+    {
+        return true;
+    }
+    int last=n%10;
+    if(last>sum && last!=digit)
+    {
+        sum+=last;
+        return check(n/10,digit,sum);
+    }
+    else{
+        return false;
+    }
+}
+vector<int> goodNumbers(int a, int b, int digit) {
+    // Write your code here.
+    vector<int>ans;
+    for(int i=a;i<=b;i++)
+    {
+        //if one'th position of number == digit then simply skip the looop check for next number 
+        if(i%10==digit)continue;
+        //else we'll check the number, weather it satisfies good number condtion or not;
+        if(check(i/10,digit,i%10))ans.push_back(i);
+    }
+    return ans;
+}
+
+O(len(arr))*O(k)
+O(N)

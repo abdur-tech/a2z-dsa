@@ -1,0 +1,54 @@
+ Find X raised to power N
+
+ Problem statement
+You are given two numbers ’x’(it’s a float), and ’n’(it’s a integer).
+
+
+
+Your task is to calculate ‘x’ raised to power ‘n’, and return it.
+
+
+
+The expected time complexity is ’O(logn)’, and the expected space complexity is ’O(1)’, where ‘n’ is the power to which the number should be raised.
+
+
+
+Note:
+In the output, you will see the number returned by you upto 6 decimal places.
+
+Example:
+Input: ‘x’ = 10, ‘n’ = 4
+
+Output: 10000.000000
+
+Explanation: On raising ‘x’ to the power of ‘n’, the result is 10000.
+ <br> 
+
+Constraints:
+-9 <= n <= 9
+1 <= x <= 50
+
+Time Limit: 1-sec
+
+
+
+
+double postivePow(double x, int n){
+    if(n==0)    return 1;
+    return x*postivePow(x,n-1);
+}
+
+double negativePow(double x, int n) {
+    if (n == 0)
+        return 1;
+    return (1 / x) * negativePow(x, n + 1);
+}
+
+double myPow(double x, int n) {
+    if (n < 1) 
+        return negativePow(x, n);
+    return postivePow(x, n);
+}
+
+O(N)
+O(N)
