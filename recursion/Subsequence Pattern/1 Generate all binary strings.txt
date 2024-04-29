@@ -1,0 +1,43 @@
+ Binary strings with no consecutive 1s.
+
+
+
+Problem statement
+You have been given an integer 'N'. Your task is to generate and return all binary strings of length 'N' such that there are no consecutive 1's in the string.
+
+
+
+A binary string is that string which contains only ‘0’ and ‘1’.
+
+
+
+For Example:
+Let ‘N'=3, hence the length of the binary string would be 3. 
+
+We can have the following binary strings with no consecutive 1s:
+000 001 010 100 101 
+
+#include<bits/stdc++.h>
+
+void rec(vector<string> &ans,int N,string s)
+{
+    
+    if(s.size()==N)
+    {
+        ans.push_back(s);
+        return;
+    }
+    rec(ans,N,s+'0');
+    if(s[s.size()-1]!='1')
+    {
+        rec(ans,N,s+'1');
+    }
+}
+
+vector<string> generateString(int N) {
+    // Write your code here.
+    vector<string> ans;
+    rec(ans,N,"");
+    return ans;
+}
+
