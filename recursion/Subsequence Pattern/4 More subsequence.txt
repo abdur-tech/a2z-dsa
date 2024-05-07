@@ -1,0 +1,42 @@
+ More subsequence
+
+ Problem statement
+You are given two strings 'A' and 'B' of length 'N' and 'M' respectively.
+
+
+
+Return the string that has more distinct subsequences, if both strings have the same number of distinct subsequences, then return 'A'.
+
+
+
+For Example:
+'N' = 2, 'M' = 2, 'A' = "ab", 'B' = "dd".
+
+'A' has distinct subsequences = ["a", "b", "ab"].
+'B' has distinct subsequences = ["d", "dd"].
+So our answer is "ab".
+
+
+void findsubs(int index,string s,string temp,vector<string> &ans)
+{
+    if(index==s.size())
+    {
+        ans.push_back(temp);
+        return;
+    }
+    findsubs(index+1, s,  temp+s[index], ans);
+    while(index+1<s.size() && s[index]==s[index+1]) index++;
+    findsubs(index+1, s, temp, ans);
+}
+
+string moreSubsequence(int n, int m, string a, string b)
+{
+    vector<string> da;
+    vector<string> db;
+    findsubs(0, a, "", da);
+    findsubs(0, b, "", db);
+    //cout<<db[0];
+    if(da.size()==db.size()) return a;
+    else if (da.size()>db.size()) return a;
+    else return b;
+}

@@ -1,0 +1,50 @@
+Subarrays with Sum ‘k'
+
+Problem statement
+You are given an array 'A' of size 'N' and an integer'K'’. You need to generate and return all subarrays of array ‘A’ whose sum = ‘K’.
+
+
+
+Note: In the output, you will see the 2D array lexicographically sorted.
+
+
+
+Example:
+Input: ‘N’ = 6 ‘K’ = 3
+‘A’ = [1, 2, 3, 1, 1, 1]
+Output: 3
+Explanation: Subarrays whose sum = ‘3’ are:
+[1, 2], [3], and [1, 1, 1]
+
+
+void findsum(int i,long long sum,long long k,vector<int> &a,vector<int>&temp,vector<vector<int>> &ans)
+{
+    if(sum==k)
+    {
+        ans.push_back(temp);
+    }
+    if (sum>k)
+    {
+         while(sum>k && !temp.empty()){
+           sum -= temp[0];
+           temp.erase(temp.begin());
+       }
+       if(sum==k){
+           ans.push_back(temp);
+       }
+    }
+     if(i==a.size()){
+
+       return;
+
+   }
+    sum+=a[i];
+    temp.push_back(a[i]);
+    findsum(i+1, sum, k, a, temp, ans);
+}
+vector<vector<int>> subarraysWithSumK(vector<int> a, long long k) {
+    vector<vector<int>> ans;
+    vector<int> temp;
+    findsum(0, 0, k, a, temp, ans);
+    return ans;
+}
