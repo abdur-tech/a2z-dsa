@@ -1,0 +1,41 @@
+Subset Sum
+
+Problem statement
+You are given an array 'A' of 'N' integers. You have to return true if there exists a subset of elements of 'A' that sums up to 'K'. Otherwise, return false.
+
+
+
+For Example
+'N' = 3, 'K' = 5, 'A' = [1, 2, 3].
+Subset [2, 3] has sum equal to 'K'.
+So our answer is True.
+
+Sample Input 2 :
+5 14
+4 2 5 6 7
+Sample Output 2 :
+Yes
+
+
+bool findsum(int i,int sum,int n,int k,vector<int> &a)
+{
+    if(sum==k){
+        return true;
+    }
+    if(sum>k) return false;
+    if(i==n)
+    {
+        return false;
+    }
+    sum+=a[i];
+    if(findsum(i+1,sum,n,k,a)) return true;
+    sum-=a[i];
+    if(findsum(i+1, sum, n, k, a)) return true;
+    return false;
+}
+
+bool isSubsetPresent(int n, int k, vector<int> &a)
+{
+   return findsum(0,0,n,k,a);
+}
+
