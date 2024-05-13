@@ -1,0 +1,45 @@
+Subset - II | Print all the Unique Subsets
+
+Problem Statement: Given an array of integers that may contain duplicates the task is to return all possible subsets. Return only unique subsets and they can be in any order.
+
+Examples:
+
+Example 1:
+
+Input: array[] = [1,2,2]
+
+Output: [ [ ],[1],[1,2],[1,2,2],[2],[2,2] ]
+
+Explanation: We can have subsets ranging from  length 0 to 3. which are listed above. Also the subset [1,2] appears twice but is printed only once as we require only unique subsets.
+
+Input: array[] = [1]
+
+Output: [ [ ], [1] ]
+
+Explanation: Only two unique subsets are available
+
+
+class Solution {
+public:
+void helper(int index,int n,vector<int> &temp,vector<int>& nums,vector<vector<int>> &ans)
+    {
+        ans.push_back(temp);
+        for(int i = index;i<n;i++)
+        {
+            if(index!=i && nums[i]==nums[i-1]) continue;
+            temp.push_back(nums[i]);
+            helper(i+1,n,temp,nums,ans);
+            temp.pop_back();
+        }
+    }
+    vector<vector<int>> subsetsWithDup(vector<int>& nums) {
+        vector<vector<int>> ans;
+        vector<int> temp;
+        int n = nums.size();
+        sort(nums.begin(),nums.end());
+        helper(0,n,temp,nums,ans);
+        
+        return ans;
+    }
+};
+
