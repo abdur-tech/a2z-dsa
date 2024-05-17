@@ -1,0 +1,47 @@
+139. Word Break
+
+Given a string s and a dictionary of strings wordDict, return true if s can be segmented into a space-separated sequence of one or more dictionary words.
+
+Note that the same word in the dictionary may be reused multiple times in the segmentation.
+
+Example 1:
+
+Input: s = "leetcode", wordDict = ["leet","code"]
+Output: true
+Explanation: Return true because "leetcode" can be segmented as "leet code".
+Example 2:
+
+Input: s = "applepenapple", wordDict = ["apple","pen"]
+Output: true
+Explanation: Return true because "applepenapple" can be segmented as "apple pen apple".
+Note that you are allowed to reuse a dictionary word.
+Example 3:
+
+Input: s = "catsandog", wordDict = ["cats","dog","sand","and","cat"]
+Output: false
+
+
+
+class Solution {
+public:
+    bool findseg(int index,string add,string s,unordered_set<string> &st)
+    {
+        //cout<<add<<" "<<index<<endl;
+        if(index==s.size()-1){
+            if(st.find(add)!=st.end()) return true;
+            return false;
+        }
+        if(st.find(add)!=st.end())
+        {
+            if(findseg(index+1,string(1,s[index+1]),s,st)){
+                return true;
+            }
+        }
+        return findseg(index+1,add+s[index+1],s,st);
+    }
+    bool wordBreak(string s, vector<string>& wordDict) {
+        unordered_set<string> st;
+        for(auto it:wordDict) st.insert(it);
+        return findseg(0,string(1,s[0]),s,st);
+    }
+};
