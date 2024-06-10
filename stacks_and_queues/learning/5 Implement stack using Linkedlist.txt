@@ -1,0 +1,48 @@
+Implement stack using linked list
+
+We can insert it at the beginning of the linked list using the following steps:
+
+Create a node for our new element.
+Point to the next pointer of our element node to point to the head of the linked list.
+Make the element node our top node.
+Increment the size variable.
+
+struct StackNode {
+    int data;
+    StackNode *next;
+    StackNode(int a) {
+        data = a;
+        next = NULL;
+    }
+};
+
+class MyStack {
+  private:
+    StackNode *top;
+
+  public:
+    void push(int);
+    int pop();
+    MyStack() { top = NULL; }
+};
+
+//Function to push an integer into the stack.
+void MyStack ::push(int x) 
+{
+    StackNode* newNode = new StackNode(x);
+    if(top==NULL){
+        top=newNode;
+        return;
+    }
+    newNode->next = top;
+    top=newNode;
+}
+
+//Function to remove an item from top of the stack.
+int MyStack ::pop() 
+{
+    if(top==NULL) return -1;
+    int data = top->data;
+    top = top->next;
+    return data;
+}
