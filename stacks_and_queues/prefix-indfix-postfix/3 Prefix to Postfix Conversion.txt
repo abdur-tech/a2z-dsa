@@ -1,0 +1,43 @@
+Prefix to Postfix Conversion
+https://www.youtube.com/watch?v=LOmt_A-Ro84&ab_channel=NehaPatil
+You are given a string that represents the prefix form of a valid mathematical expression. Convert it to its postfix form.
+
+Example:
+
+Input: 
+*-A/BC-/AKL
+Output: 
+ABC/-AK/L-*
+Explanation: 
+The above output is its valid postfix form.
+Your Task:
+
+Complete the function preToPost(string pre_exp), which takes a prefix string as input and returns its postfix form.
+
+ 
+
+Expected Time Complexity: O(N).
+
+Expected Auxiliary Space: O(N).
+
+string preToPost(string pre_exp) {
+        stack<string> st;
+        string ans = "";
+        for(int i = pre_exp.size()-1;i>=0;i--)
+        {
+            string c = string(1,pre_exp[i]);
+            if((c>="a" && c<="z")||(c>="A" && c<="Z")||(c>="0" && c<="9"))
+            {
+                st.push(c);
+            }
+            else
+            {
+                string a = st.top();
+                st.pop();
+                string b = st.top();
+                st.pop();
+                st.push(a+b+c);
+            }
+        }
+        return st.top();
+    }

@@ -1,0 +1,48 @@
+Prefix to Infix Conversion 
+for explanation see :- https://www.youtube.com/watch?v=b6m4f2xwRjM&ab_channel=Education4u
+
+You are given a string S of size N that represents the prefix form of a valid mathematical expression. Convert it to its infix form.
+
+Example 1:
+
+Input: 
+*-A/BC-/AKL
+Output: 
+((A-(B/C))*((A/K)-L))
+Explanation: 
+The above output is its valid infix form.
+Your Task:
+
+Complete the function string preToInfix(string pre_exp), which takes a prefix string as input and return its infix form.
+
+ 
+
+Expected Time Complexity: O(N).
+
+Expected Auxiliary Space: O(N).
+
+class Solution {
+  public:
+    string preToInfix(string pre_exp) {
+        stack<string> st;
+        string ans;
+        int n = pre_exp.size();
+        for(int i =n-1;i>=0;i--)
+        {
+            string c = string(1,pre_exp[i]);
+            if((c>="A" && c<="Z") || (c>="a" && c<="z") || (c>="0" && c<="9")){
+                st.push(c);
+            }
+            else{
+                string a = st.top();
+                st.pop();
+                string b = st.top();
+                st.pop();
+                
+                // push as a operand b
+                st.push("("+a+c+b+")");
+            }
+        }
+        return st.top();
+    }
+};
