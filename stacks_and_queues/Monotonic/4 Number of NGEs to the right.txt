@@ -1,0 +1,98 @@
+Number of NGEs to the right
+
+
+Given an array of N integers and Q queries of indices, print the number of next greater elements(NGEs) to the right of the given index element. 
+Example:
+
+Input:  arr     = [3, 4, 2, 7, 5, 8, 10, 6]
+        queries = 2
+        indices = [0, 5]
+Output:  6, 1
+Explanation:  
+The next greater elements to the right of 3(index 0)
+are 4,7,5,8,10,6.  
+The next greater elements to the right of 8(index 5)
+is only 10.
+
+The idea behind this approach is Count Inversion(Merge Sort). In Count Inversion we were finding Inversion pair using merge sort. For i<j if arr[i]>arr[j] then that will be an inversion pair. Using similar logic we can find those pair for which i<j and arr[i]<arr[j]. So we can find, there are how many “j” for an “i” such that i<j and arr[i]<arr[j]. Then that number of j will be the number of the next greater element for i.
+
+So we will simply perform merge sort and in merging we will check this condition -” i<j and arr[i]<arr[j]”
+
+Algorithm:
+
+Declare a vector “ans” to store the Number of NGEs to the right for every element
+We will use a vector of pair to store the element along with their index
+In the pair, the first element will be the number and the second element will be the index of that number
+Sort the vector of pair on the basis of the first element of the pair
+Used vector of pair because after sorting, the position of the element will change but every element has its previous index so that we can track its previous position.
+So we will find the number of NGEs to the right and store them in “ans” vector at the element’s previous position
+We will perform mergesort by calling mergesort recursively for the first half then for the second half and then calling the merge function
+In the merge function when any element let us say “a” of the first part is lesser than any other element of the second part let us say “b” then that element “a” of the first part will be smaller than those elements of the second part which are from “b” till last.
+In other words, all those elements from “b” till last will be the next greater element for “a“
+So, find the count of all the elements in the second part from “b” till the last.
+Then add that count in “ans” vector at a’s position
+In last we have the Number of next greater element for each index, so return NGEs for those indexes which are given in the query
+
+
+class Solution{
+public:
+    void merge(vector<pair<int,int>> &vec, int l,int m,int r,vector<int> &ans)
+    {
+        int i = l;
+        int j = m+1;
+        vector<pair<int,int>> temp;
+        while(i<=m && j<=r)
+        {
+            if(vec[i].first<vec[j].first){
+                ans[vec[i].second]+=(r-j)+1;
+                temp.push_back(vec[i]);
+                i++;
+            }
+            else{
+                temp.push_back(vec[j]);
+                j++;
+            }
+        }
+        while(i<=m)
+        {
+                temp.push_back(vec[i]);
+                i++;
+        }
+        while(j<=r)
+        {
+                temp.push_back(vec[j]);
+                j++;
+        }
+        for(int f=l;f<=r;f++){
+            vec[f]=temp[f-l];
+        }
+    }
+    void mergeSort(vector<pair<int,int>> &vec,int l,int r,vector<int> &ans)
+    {
+        if(l<r)
+        {
+            int m = (l+r)/2;
+            mergeSort(vec,l,m,ans);
+            mergeSort(vec,m+1,r,ans);
+            merge(vec,l,m,r,ans);
+        }
+    }
+    vector<int> count_NGE(int n, vector<int> &arr, int queries, vector<int> &indices){
+        //write your code here
+        vector<pair<int,int>> vec;
+         vector<int> ans(n,0);
+        for(int i=0;i<n;i++){
+            vec.push_back({arr[i],i});
+        }
+       mergeSort(vec,0,n-1,ans);
+       //for(int i = 0;i<n;i++) cout<<vec[i]<<endl;
+       vector<int> final(queries);
+       for(int i = 0;i<queries;i++){
+           final[i]=ans[indices[i]];
+       }
+       return final;
+    }
+
+};
+
+O(NlogN) O(N)
