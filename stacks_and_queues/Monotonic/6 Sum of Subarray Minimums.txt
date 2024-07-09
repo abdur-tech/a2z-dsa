@@ -1,0 +1,133 @@
+Sum of Subarray Minimums
+
+Given an array of integers arr, find the sum of min(b), where b ranges over every (contiguous) subarray of arr. Since the answer may be large, return the answer modulo 109 + 7.
+
+
+Example 1:
+
+Input: arr = [3,1,2,4]
+Output: 17
+Explanation: 
+Subarrays are [3], [1], [2], [4], [3,1], [1,2], [2,4], [3,1,2], [1,2,4], [3,1,2,4]. 
+Minimums are 3, 1, 2, 4, 1, 1, 2, 1, 1, 1.
+Sum is 17.
+Example 2:
+
+Input: arr = [11,81,94,43,3]
+Output: 444
+
+approach 1:- (Itervative approach)
+
+int sumSubarrayMins(vector<int>& arr) {
+        int n = arr.size();
+        int ans = 0;
+        int mod = (int)1e9+7;
+        for(int i = 0;i<n;i++){
+            for(int j = i;j<n;j++)
+            {
+                int mini = INT_MAX;
+                for(int k = i;k<=j;k++){
+                    mini = min(arr[k],mini);
+                }
+                ans = (ans+mini)%mod;
+
+            }
+            
+        }
+        return ans;
+}
+TC -> O(N3)
+SC -> O(N)
+
+-------------------------------------------------
+approach 2:- (Itervative approach)
+
+int sumSubarrayMins(vector<int>& arr) {
+        int n = arr.size();
+        int ans = 0;
+        int mod = (int)1e9+7;
+        for(int i = 0;i<n;i++){
+            int mini = INT_MAX;
+            for(int j = i;j<n;j++)
+            {
+                mini = min(arr[j],mini);
+                ans = (ans+mini)%mod;
+            }
+            
+        }
+        return ans;
+    }
+TC -> O(N2)
+SC -> O(N)
+
+
+Approach 3:- (Monotonic Stack)
+
+best explanation== https://www.youtube.com/watch?v=5Hag64mLXac&ab_channel=AryanMittal
+
+
+Explanation of the Code
+Initialization:
+
+    ans is initialized to 0 to accumulate the sum of minimum values of all subarrays.
+    n is the size of the array arr.
+    leftarray and rightarray are initialized to store the number of subarrays where arr[i] is the minimum value from the left and right respectively.
+    leftstack and rightstack are stacks of pairs (value, count) used to calculate leftarray and rightarray.
+
+Finding leftarray:
+
+    Iterate through each element arr[i].
+    Use leftstack to keep track of pairs (value, count) where value is the element value and count is the number of subarrays for which this element is the minimum so far.
+    For each element arr[i], pop elements from leftstack until the top element has a value greater than arr[i]. Update count accordingly and push the updated pair (arr[i], cnt) onto leftstack.
+    leftarray[i] is set to cnt, which represents the number of subarrays where arr[i] is the minimum from the left.
+
+Finding rightarray:
+
+    Iterate through each element arr[i] from right to left.
+    Similar to leftarray, use rightstack to calculate the number of subarrays where arr[i] is the minimum from the right.
+
+Calculating ans:
+
+    Iterate through each element arr[i].
+    Update ans using the formula (ans + (long long)arr[i] * leftarray[i] * rightarray[i]) % mod. This calculates the contribution of arr[i] as the minimum value in all possible subarrays.
+    Modulo Operation:
+
+    mod is defined as 1e9 + 7 to handle large numbers and prevent overflow.
+
+int sumSubarrayMins(vector<int>& arr) {
+        long long ans = 0;
+        int n = arr.size();
+        vector<int> leftarray(n),rightarray(n);
+        stack<pair<int,int>> leftstack,rightstack;
+        long long mod = 1e9+7;
+        // finding left array
+        for(int i = 0;i<n;i++)
+        {
+            int cnt = 1;
+            while(!leftstack.empty() && leftstack.top().first>arr[i]){
+                cnt+=leftstack.top().second;
+                leftstack.pop();
+            }
+            leftstack.push({arr[i],cnt});
+            leftarray[i]=cnt;
+        }
+        // finding right array
+        for(int i = n-1;i>=0;i--)
+        {
+            int cnt = 1;
+            while(!rightstack.empty() && rightstack.top().first>=arr[i]){  //equal for duplicates value
+                cnt+=rightstack.top().second;
+                rightstack.pop();
+            }
+            rightstack.push({arr[i],cnt});
+            rightarray[i]=cnt;
+        }
+
+        for(int i = 0;i<n;i++){
+            ans = (ans + (long long)arr[i] * leftarray[i] * rightarray[i]) % mod;
+        }
+        return ans;
+    }
+
+o(N)
+O(N)
