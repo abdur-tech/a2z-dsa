@@ -1,0 +1,75 @@
+Remove k Digits
+
+Given string num representing a non-negative integer num, and an integer k, return the smallest possible integer after removing k digits from num.
+
+ 
+
+Example 1:
+
+Input: num = "1432219", k = 3
+Output: "1219"
+Explanation: Remove the three digits 4, 3, and 2 to form the new number 1219 which is the smallest.
+Example 2:
+
+Input: num = "10200", k = 1
+Output: "200"
+Explanation: Remove the leading 1 and the number is 200. Note that the output must not contain leading zeroes.
+Example 3:
+
+Input: num = "10", k = 2
+Output: "0"
+Explanation: Remove all the digits from the number and it is left with nothing which is 0.
+
+
+
+Approach is simple. We need a number which is minimum, thus we need to remove the most significant digits first. For eg. if we have a number having digits 1-4 then 1234 would be the minimum and not 2314 or anything else. So in case of 2314, we remove 3 first, and then we go for 2 (Because they are more significant than 4). Observing this simple idea, we need to remove any digit which is greater than its following digit. Thats why we deleted 3 as it was greater than 1 and similiarly 2 as it was also greater than 1.
+
+In order to accomplish this, we use stack Data Structure where we pop the top if it is greater than current digit.
+
+The conditions mentioned in while loop are important to avoid any Runtime Error. For eg. ["10001" 2] the answer is "0" but if we don't mention the condition !s.empty(), then the while loop will run on empty stack and try to pop the top which doesn't exist thus throwing RE.
+
+
+class Solution {
+public:
+    string removeKdigits(string str, int k) {
+        if(str.length() <= k)
+            return "0";
+        if(k == 0)
+            return str;
+        
+        stack <char> s;
+        
+        s.push(str[0]);
+        
+        for(int i = 1; i<str.length(); i++){
+            while(k>0 && !s.empty() && str[i]<s.top()){
+                k--;
+                s.pop();
+            }
+            s.push(str[i]);
+            
+			
+        }
+        
+		// For cases like "12345" where every str[i] > s.top()
+        while(k && !s.empty()){
+            k--;
+            s.pop();
+        }
+        
+
+        string res = "";
+        while(!s.empty()){
+            res.push_back(s.top());
+            s.pop();
+        }
+        // We pop any preceeding zeroes
+        while(res.size()>0 && res.back()=='0') res.pop_back();
+
+        reverse(res.begin(), res.end());
+        if(res.size() == 0)
+            return "0";
+        else
+        return res;
+    }
+};
