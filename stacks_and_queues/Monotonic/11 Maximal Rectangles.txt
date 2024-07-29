@@ -1,0 +1,77 @@
+Maximal Rectangle
+
+Given a rows x cols binary matrix filled with 0's and 1's, find the largest rectangle containing only 1's and return its area.
+
+Input: matrix = [["1","0","1","0","0"],["1","0","1","1","1"],["1","1","1","1","1"],["1","0","0","1","0"]]
+Output: 6
+Explanation: The maximal rectangle is shown in the above picture.
+
+
+solution understanding => https://www.youtube.com/watch?v=ttVu6G7Ayik&t=639s&ab_channel=takeUforward
+
+class Solution {
+public:
+int largestRectangleArea(vector<int>& heights) {
+        int n = heights.size();
+        vector<int> leftsmaller(n);
+        vector<int> rightsmaller(n);
+
+        //Findind left smaller;
+        stack<int> st1,st2;
+        for(int i = 0;i<n;i++)
+        {
+            while(!st1.empty() && heights[st1.top()]>=heights[i]){  //we are storing index
+                st1.pop();
+            }
+            if(!st1.empty()){
+                leftsmaller[i]=st1.top()+1;
+            }
+            else{
+                leftsmaller[i]=0;
+            }
+            st1.push(i);
+        }
+        //Findind right smaller;
+        for(int i = n-1;i>=0;i--)
+        {
+            while(!st2.empty() && heights[st2.top()]>=heights[i]){  //we are storing index
+                st2.pop();
+            }
+            if(!st2.empty()){
+                rightsmaller[i]=st2.top()-1;
+            }
+            else{
+                rightsmaller[i]=n-1;
+            }
+            st2.push(i);
+        }
+
+        int ans = 0;
+        for(int i = 0;i<n;i++)
+        {
+            ans = max(ans,(rightsmaller[i]-leftsmaller[i]+1)*heights[i]);
+        }
+        return ans;
+    }
+    int maximalRectangle(vector<vector<char>>& matrix) {
+        int row = matrix.size();
+        int col = matrix[0].size();
+        vector<vector<int>> prefix(row,vector<int>(col,0));
+
+        for(int j = 0;j<col;j++)
+        {
+            int ht = 0;
+            for(int i = 0;i<row;i++)
+            {
+                if(matrix[i][j]=='1') prefix[i][j]=++ht;
+                else ht=0;
+            }
+        }
+        int ans = 0;
+        for(int i = 0;i<row;i++)
+        {
+            ans = max(ans,largestRectangleArea(prefix[i]));
+        }
+        return ans;
+    }
+};
