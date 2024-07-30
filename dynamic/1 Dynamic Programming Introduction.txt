@@ -1,0 +1,84 @@
+Dynamic Programming Introduction
+
+Problem Statement:  Introduction To Dynamic Programming
+
+In this article, we will be going to understand the concept of dynamic programming.
+
+Dynamic Programming can be described as storing answers to various sub-problems to be used later whenever required to solve the main problem.
+
+The two common dynamic programming approaches are:
+
+Memoization: Known as the “top-down” dynamic programming, usually the problem is solved in the direction of the main problem to the base cases.
+Tabulation: Known as the “bottom-up '' dynamic programming, usually the problem is solved in the direction of solving the base cases to the main problem
+Note: The base case does not always mean smaller input. It depends upon the implementation of the algorithm.
+
+Quetion:--
+
+Geek is learning data structures, and he recently learned about the top-down and bottom-up dynamic programming approaches. Geek is having trouble telling them apart from one another.
+
+When given an integer n, where n is based on a 0-based index, find the nth Fibonacci number.
+
+Every ith number in the series equals the sum of the (i-1)th and (i-2)th numbers, where the first and second numbers are specified as 0 and 1, respectively.
+
+For the given issue, code both top-down and bottom-up approaches.
+
+Note : As the answer might be large, return the final answer modulo 109 + 7
+
+Example 1:
+
+Input:
+n = 5
+Output: 5
+Explanation: 0,1,1,2,3,5 as we can see 5th number is 5.
+Example 2:
+
+Input:
+n = 6
+Output: 8
+Explanation: 0,1,1,2,3,5,8 as we can see 6th number is 8.
+
+Part - 1: Memoizaton
+We want to compute f(2) as the second call from f(4), but in the recursive tree we had already computed f(2) once (in the first recursive call of f(3) ) Similar is the case with f(3), therefore if we somehow store these values, the first time we calculated it then we can simply find its value in constant time whenever we need it. This technique is called Memoization.
+Steps to memoize a recursive solution:
+
+Any recursive solution to a problem can be memoized using these three steps:
+
+Create a dp[n+1] array initialized to -1.
+Whenever we want to find the answer of a particular value (say n), we first check whether the answer is already calculated using the dp array(i.e dp[n]!= -1 ). If yes, simply return the value from the dp array.
+If not, then we are finding the answer for the given value for the first time, we will use the recursive relation as usual but before returning from the function, we will set dp[n] to the solution we get.
+
+
+Part -2: Tabulation
+
+Tabulation is a ‘bottom-up’ approach where we start from the base case and reach the final answer that we want.
+Steps to convert Recursive Solution to Tabulation one.
+
+Declare a dp[] array of size n+1.
+First initialize the base condition values, i.e i=0 and i=1 of the dp array as 0 and 1 respectively.
+Set an iterative loop that traverses the array( from index 2 to n) and for every index set its value as dp[i-1] + dp[i-2]. 
+
+class Solution {
+  public:
+    long long int M=1e9+7;
+    long long int memoization(int n,vector<long long int>  &dp)
+    {
+        if(n<=1) return n;
+        if(dp[n]!=-1) return dp[n];
+        return dp[n] = (memoization(n-1,dp)+memoization(n-2,dp))%M;
+    }
+    long long int topDown(int n) {
+        vector<long long int> dp(n+1,-1);
+        return memoization(n,dp);
+    }
+    long long int bottomUp(int n) {
+        // code here
+        vector<long long int> dp(n+1);
+        dp[0]=0;
+        dp[1]=1;
+        for(int i = 2;i<=n;i++)
+        {
+            dp[i]=(dp[i-1]+dp[i-2])%M;
+        }
+        return dp[n];
+    }
+};
