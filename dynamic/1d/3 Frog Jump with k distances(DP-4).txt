@@ -1,0 +1,37 @@
+Dynamic Programming: Frog Jump with k Distances (DP 4)
+
+In this article, we will learn about "Dynamic Programming: Frog Jump with k Distances (DP 4)"
+
+Problem Statement:  Frog Jump with K Distance/ Learn to write 1D DP
+
+Problem Statement:
+
+This is a follow-up question to “Frog Jump” discussed in the previous article. In the previous question, the frog was allowed to jump either one or two steps at a time. In this question, the frog is allowed to jump up to ‘K’ steps at a time. If K=4, the frog can jump 1,2,3, or 4 steps at every index.
+
+
+Memorization Approach
+
+class Solution {
+  public:
+  
+    int f(int idx,int k,vector<int>& arr,vector<int>& dp)
+    {
+        if(idx==0){
+            return 0;
+        }
+        if(dp[idx]!=-1) return dp[idx];
+        int energy = INT_MAX;
+        for(int i = 1;i<=k && idx-i>=0;i++)
+        {
+            energy = min(energy,f(idx-i,k,arr,dp) + abs(arr[idx]-arr[idx-i]));
+        }
+        return dp[idx]=energy;
+    }
+    int minimizeCost(vector<int>& arr, int& k) {
+        int n = arr.size();
+        vector<int> dp(n+1,-1);
+        return f(n-1,k,arr,dp);
+    }
+};
+
+
