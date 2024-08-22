@@ -1,0 +1,62 @@
+Minimum path sum in Triangular Grid
+
+Problem Description: 
+
+We are given a Triangular matrix. We need to find the minimum path sum from the first row to the last row.
+
+At every cell we can move in only two directions: either to the bottom cell (↓) or to the bottom-right cell(↘)
+
+Example 1:
+
+Input: triangle = [[2],[3,4],[6,5,7],[4,1,8,3]]
+Output: 11
+Explanation: The triangle looks like:
+   2
+  3 4
+ 6 5 7
+4 1 8 3
+The minimum path sum from top to bottom is 2 + 3 + 5 + 1 = 11 (underlined above).
+Example 2:
+
+Input: triangle = [[-10]]
+Output: -10
+
+class Solution {
+public:
+//Memoization
+    int f(int row,int col,vector<vector<int>>& triangle,vector<vector<int>> &dp){
+        if(row>=triangle.size()){
+            return 0;
+        }
+        if(dp[row][col]!=-1) return dp[row][col];
+        cout<<row<<" "<<col<<endl;
+        int curr=triangle[row][col]+f(row+1,col,triangle,dp);
+        int next=triangle[row][col]+f(row+1,col+1,triangle,dp);
+        return dp[row][col]=min(curr,next);
+    }
+    int _minimumTotal(vector<vector<int>>& triangle) {
+        int m = triangle.size();
+        vector<vector<int>> dp(m+1,vector<int>(m+1,-1));
+        return f(0,0,triangle,dp);
+    }
+//Tabulation
+    int minimumTotal(vector<vector<int>>& triangle) {
+        int m = triangle.size();
+        vector<vector<int>> dp(m+1,vector<int>(m+1,-1));
+        
+        
+        for(int i = m-1;i>=0;i--)
+        {
+            for(int j = triangle[i].size()-1;j>=0;j--)
+            {
+                if(i==m-1){
+                    dp[i][j]=triangle[i][j];
+                }
+                else{
+                    dp[i][j]=triangle[i][j]+min(dp[i+1][j],dp[i+1][j+1]);
+                }
+            }
+        }
+        return dp[0][0];
+    }
+};
