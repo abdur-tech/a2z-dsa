@@ -1,0 +1,115 @@
+Count Subsets with Sum K (DP - 17)
+
+Given an array arr of size n of non-negative integers and an integer sum, the task is to count all subsets of the given array with a sum equal to a given sum.
+
+Note: Answer can be very large, so, output answer modulo 109+7.
+
+Examples:
+
+Input: 
+n = 6, arr = [5, 2, 3, 10, 6, 8], sum = 10
+Output: 
+3
+Explanation: 
+{5, 2, 3}, {2, 8}, {10} are possible subsets.
+Input: 
+n = 5, arr = [2, 5, 1, 4, 3], sum = 10
+Output: 
+3
+Explanation: 
+{2, 1, 4, 3}, {5, 1, 4}, {2, 5, 3} are possible subsets.
+
+
+
+
+class Solution{
+
+	public:
+	// Brute force approach
+	int _perfectSum(int arr[], int n, int sum)
+	{
+        int mod = 1e7;
+        long ans = 0;
+        for(int mask = 0;mask<(1<<n);mask++)
+        {
+            long num = 0;
+            for(int i = 0;i<n;i++)
+            {
+                if(mask&(1<<i)) num = (num+arr[i])%mod;
+            }
+            if(num==sum) ans=(ans+1)%mod;
+        }
+        return ans;
+	}
+	//Memoization
+	int f(int ind,int arr[],int sum,vector<vector<int>> &dp){
+	    int mod = 1000000007;
+	    if(ind == -1){
+	        if(sum==0) return 1;
+	        else return 0;
+	    } //lets cover all indices, because zero will be there in input
+	    if(dp[ind][sum]!=-1) return dp[ind][sum];
+	    int taken = 0;
+	    if (arr[ind] <= sum)
+	        taken  = f(ind-1,arr,sum-arr[ind],dp)%mod;
+	    int nottaken = f(ind-1,arr,sum,dp)%mod;
+	    return dp[ind][sum]=(taken+nottaken)%mod;
+	}
+	int __perfectSum(int arr[], int n, int sum)
+	{
+	    vector<vector<int>> dp(n+1,vector<int>(sum+1,-1));
+        return f(n-1,arr,sum,dp);
+	}
+	//Tabulation
+    int perfectSum(int arr[], int n, int k)
+	{
+	    vector<vector<int>> dp(n+1,vector<int>(k+1,0));
+        
+        for(int i = 0;i<n;i++) {
+            dp[i][0]=1;
+        }
+         if (arr[0] <= k) {
+            dp[0][arr[0]] = 1;
+        }
+        if(arr[0] == 0) dp[0][0] = 2;  // 
+        for(int ind =1;ind<n;ind++)
+        {
+            for(int target = 0;target<=k;target++)
+            {
+                 int notTaken = dp[ind - 1][target];
+                 int taken = 0;
+                if (arr[ind] <= target) {
+                    taken = dp[ind - 1][target - arr[ind]];
+                    }
+                
+                dp[ind][target]= (notTaken + taken)%1000000007;
+            }
+        }
+        return dp[n-1][k];
+	}
+};
+
+
+//The line if(arr[0] == 0) dp[0][0] = 2; is addressing a special case where the first element of the array (arr[0]) is 0. Here's why this special case is handled differently:
+
+Understanding the Special Case
+Empty Subset Contribution:
+
+For any array, there is always at least one subset that sums to 0—the empty subset.
+This is why dp[0][0] is initialized to 1 when arr[0] != 0, to represent the empty subset.
+When arr[0] == 0:
+
+If the first element of the array is 0, there are two subsets that sum to 0:
+The empty subset.
+The subset containing the single element 0.
+Hence, when arr[0] == 0, dp[0][0] should be 2 to account for both the empty subset and the subset containing 0.
+Example to Illustrate
+Consider an array [0] and k = 0:
+
+The subsets that sum to 0 are:
+
+{} (empty subset)
+{0} (subset containing the first element 0)
+Therefore, dp[0][0] should count both subsets, resulting in dp[0][0] = 2.
+
+This is why the special case if(arr[0] == 0) dp[0][0] = 2; is necessary—to correctly count the number of subsets when the first element is 0.

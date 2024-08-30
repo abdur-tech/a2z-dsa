@@ -1,0 +1,137 @@
+Partition Set Into 2 Subsets With Min Absolute Sum Diff (DP- 16)
+
+See this problem
+dp solution will works if array has only positive elements . but if array has negative numbers . and if we get  the total sum is negative then in dp vector creation problem will occur because of this negative total sum and compailer will shows heap-buffer-overflow
+according to striver solution, only positive input will work
+
+first we do striver solution and in leetcode you have negatie case also
+
+
+Memorization Approach
+
+Algorithm / Intuition
+This question is a slight modification of the problem discussed in the Subset Sum equal to target. 
+
+Before discussing the approach for this question, it is important to understand what we did in the previous question of the Subset Sum equal to the target. There we found whether or not a subset exists in an array with a given target sum. We used a dp array to get to our answer.
+
+// Function to solve the subset sum problem with memoization
+bool subsetSumUtil(int ind, int target, vector<int>& arr, vector<vector<int>>& dp) {
+    // Base case: If the target sum is 0, return true
+    if (target == 0)
+        return dp[ind][target] = true;
+
+    // Base case: If we have considered all elements and the target is still not 0, return false
+    if (ind == 0)
+        return dp[ind][target] = (arr[0] == target);
+
+    // If the result for this state is already calculated, return it
+    if (dp[ind][target] != -1)
+        return dp[ind][target];
+
+    // Recursive cases
+    // 1. Exclude the current element
+    bool notTaken = subsetSumUtil(ind - 1, target, arr, dp);
+
+    // 2. Include the current element if it doesn't exceed the target
+    bool taken = false;
+    if (arr[ind] <= target)
+        taken = subsetSumUtil(ind - 1, target - arr[ind], arr, dp);
+
+    // Store the result in the DP table and return
+    return dp[ind][target] = notTaken || taken;
+}
+
+// Function to find the minimum absolute difference between two subset sums
+int minSubsetSumDifference(vector<int>& arr, int n) {
+    int totSum = 0;
+
+    // Calculate the total sum of the array
+    for (int i = 0; i < n; i++) {
+        totSum += arr[i];
+    }
+
+    // Initialize a DP table to store the results of the subset sum problem
+    vector<vector<int>> dp(n, vector<int>(totSum + 1, -1));
+
+    // Calculate the subset sum for each possible sum from 0 to the total sum
+    for (int i = 0; i <= totSum; i++) {
+        bool dummy = subsetSumUtil(n - 1, i, arr, dp);
+    }
+
+    int mini = 1e9;
+    for (int i = 0; i <= totSum; i++) {
+        if (dp[n - 1][i] == true) {
+            int diff = abs(i - (totSum - i));
+            mini = min(mini, diff);
+        }
+    }
+    return mini;
+}
+
+//Tabulation
+
+
+// Function to solve the subset sum problem with memoization
+bool subsetSumUtil(int ind, int target, vector<int>& arr, vector<vector<int>>& dp) {
+    // Base case: If the target sum is 0, return true
+    if (target == 0)
+        return dp[ind][target] = true;
+
+    // Base case: If we have considered all elements and the target is still not 0, return false
+    if (ind == 0)
+        return dp[ind][target] = (arr[0] == target);
+
+    // If the result for this state is already calculated, return it
+    if (dp[ind][target] != -1)
+        return dp[ind][target];
+
+    // Recursive cases
+    // 1. Exclude the current element
+    bool notTaken = subsetSumUtil(ind - 1, target, arr, dp);
+
+    // 2. Include the current element if it doesn't exceed the target
+    bool taken = false;
+    if (arr[ind] <= target)
+        taken = subsetSumUtil(ind - 1, target - arr[ind], arr, dp);
+
+    // Store the result in the DP table and return
+    return dp[ind][target] = notTaken || taken;
+}
+
+// Function to find the minimum absolute difference between two subset sums
+int minSubsetSumDifference(vector<int>& arr, int n) {
+    int totSum = 0;
+
+    // Calculate the total sum of the array
+    for (int i = 0; i < n; i++) {
+        totSum += arr[i];
+    }
+
+    // Initialize a DP table to store the results of the subset sum problem
+    vector<vector<int>> dp(n, vector<int>(totSum + 1, -1));
+
+    // Calculate the subset sum for each possible sum from 0 to the total sum
+    for (int i = 0; i <= totSum; i++) {
+        bool dummy = subsetSumUtil(n - 1, i, arr, dp);
+    }
+
+    int mini = 1e9;
+    for (int i = 0; i <= totSum; i++) {
+        if (dp[n - 1][i] == true) {
+            int diff = abs(i - (totSum - i));
+            mini = min(mini, diff);
+        }
+    }
+    return mini;
+}
+
+int main() {
+    vector<int> arr = {1, 2, 3, 4};
+    int n = arr.size();
+
+    cout << "The minimum absolute difference is: " << minSubsetSumDifference(arr, n);
+
+    return 0;
+}
+
+

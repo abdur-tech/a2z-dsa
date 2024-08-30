@@ -34,3 +34,277 @@ vector<vector<int>> subsets(vector<int>& nums) {
     TC -> O(2power N) * N
     SC -> O(2power N)
     
+
+--------------------------------------------------------------------------------------
+
+for negative and positive
+
+youtube good explanation:- https://www.youtube.com/watch?v=naz_9njI0I0&t=0s
+
+class Solution {
+public:
+    
+
+int minimumDifference(vector<int>& nums) {
+    int n = nums.size(), res = 0, sum = 0;
+    sum = accumulate(nums.begin(), nums.end(),0);
+    int N = n/2;
+    vector<vector<int>> left(N+1), right(N+1);
+
+    for(int mask=0;mask<(1<<N);mask++)
+    {
+        int sz = 0, l=0, r=0;
+        for(int i = 0;i<N;i++)
+        {
+            if(mask&(1<<i))
+            {
+                sz++;
+                l+=nums[i];  // We are calculating left subset values and right subset values
+                r+=nums[i+N];
+            }
+        }
+        left[sz].push_back(l);
+        right[sz].push_back(r);
+    } 
+
+    for(int sz=0;sz<=N;sz++){
+        sort(right[sz].begin(),right[sz].end());
+    }
+    res = min(abs(sum-2*left[N][0]), abs(sum-2*right[N][0]));
+
+   //iterating over left part
+        for(int sz=1; sz<N; ++sz){
+            for(auto &a : left[sz]){
+                int b = (sum - 2*a)/2, rsz = N-sz;
+                auto &v = right[rsz];
+                auto itr = lower_bound(v.begin(), v.end(),b); //binary search over right part
+
+                if(itr!=v.end()) res = min(res, abs(sum-2*(a+(*itr))));         
+            }
+        }
+        return res;
+}
+};
+
+
+1) 
+
+This C++ code implements a solution to minimize the absolute difference between the sums of two subsets of equal size formed from an array. Here's a step-by-step breakdown of the code:
+
+1. Initialization
+cpp
+Copy code
+int n = nums.size(), res = 0, sum = 0;
+sum = accumulate(nums.begin(), nums.end(), 0);
+int N = n / 2;
+vector<vector<int>> left(N+1), right(N+1);
+n: The size of the input array nums.
+sum: The total sum of all elements in nums.
+N: Half of the array size, i.e., N = n / 2.
+left and right: These are 2D vectors that will store the sums of all possible subsets of sizes from 0 to N for the left and right halves of the array.
+2. Generating Subset Sums
+cpp
+Copy code
+for (int mask = 0; mask < (1 << N); mask++) {
+    int sz = 0, l = 0, r = 0;
+    for (int i = 0; i < N; i++) {
+        if (mask & (1 << i)) {
+            sz++;
+            l += nums[i];        // Sum for left subset
+            r += nums[i + N];    // Sum for right subset
+        }
+    }
+    left[sz].push_back(l);
+    right[sz].push_back(r);
+}
+Purpose: To calculate all possible subset sums for the first and second halves of the array.
+Explanation:
+mask: An integer used to generate all possible subsets of the first half (LeftPart) and the second half (RightPart) of the array.
+sz: Tracks the size of the current subset.
+l and r: Store the sum of the current subset for the left and right parts of the array, respectively.
+left[sz]: Stores the sum l for subsets of size sz.
+right[sz]: Stores the sum r for subsets of size sz.
+3. Sorting Right Part Subsets
+cpp
+Copy code
+for (int sz = 0; sz <= N; sz++) {
+    sort(right[sz].begin(), right[sz].end());
+}
+Purpose: To sort all subsets of the right part (right) for efficient binary search later.
+4. Initial Result Calculation
+cpp
+Copy code
+res = min(abs(sum - 2 * left[N][0]), abs(sum - 2 * right[N][0]));
+Purpose: Calculate an initial possible result by comparing the sum of subsets of full size (N) in both left and right parts with the total sum.
+5. Iterate Over Subsets to Find Minimum Difference
+cpp
+Copy code
+for (int sz = 1; sz < N; ++sz) {
+    for (auto &a : left[sz]) {
+        int b = (sum - 2 * a) / 2, rsz = N - sz;
+        auto &v = right[rsz];
+        auto itr = lower_bound(v.begin(), v.end(), b);
+        
+        if (itr != v.end()) res = min(res, abs(sum - 2 * (a + (*itr))));
+        if (itr != v.begin()) {
+            auto it = itr; --it;
+            res = min(res, abs(sum - 2 * (a + (*it))));
+        }
+    }
+}
+Purpose: Iterate over all possible subset sums from the left part, and for each subset sum a, find the closest subset sum b from the right part such that the absolute difference between sum and 2 * (a + b) is minimized.
+
+Explanation:
+
+sz: Iterates over possible subset sizes from 1 to N-1.
+
+a: A specific sum of a subset of size sz from the left part.
+
+b: The target sum we are searching for in the right part, calculated as (sum - 2 * a) / 2.
+
+rsz: The size of the subset from the right part that we need to match with the left part.
+
+v: Reference to the vector right[rsz] containing all possible sums of subsets of size rsz.
+
+itr: The result of a binary search (lower_bound) for b in v. This finds the first element in v that is not less than b.
+
+if (itr != v.end()): Checks if a valid subset sum is found in the right part.
+
+if (itr != v.begin()): Checks the previous element to see if it's closer to b.
+
+6. Return the Result
+cpp
+Copy code
+return res;
+Returns: The minimum possible difference between the sums of two subsets of size N.
+Summary
+The algorithm effectively reduces the problem complexity by splitting the array into two halves and using a meet-in-the-middle strategy.
+It generates all possible subset sums for both halves, then combines them efficiently using binary search to find the minimum difference between the sums of two subsets of size N.
+
+
+
+
+2) explain this part more, for (int sz = 1; sz < N; ++sz) {
+    for (auto &a : left[sz]) {
+        int b = (sum - 2 * a) / 2, rsz = N - sz;
+        auto &v = right[rsz];
+        auto itr = lower_bound(v.begin(), v.end(), b);
+        
+        if (itr != v.end()) res = min(res, abs(sum - 2 * (a + (*itr))));
+        if (itr != v.begin()) {
+            auto it = itr; --it;
+            res = min(res, abs(sum - 2 * (a + (*it))));
+        }
+    }
+}
+
+
+Let's break down the specific part of the code where the algorithm iterates over possible subset sizes and calculates the minimum difference between the sums of two subsets.
+
+Context Recap
+The problem is to minimize the difference between the sums of two subsets of size N from an array of size 2N.
+The array is divided into two halves: left and right, each containing N elements.
+The code generates all possible subset sums for both halves and stores them in vectors left and right, where left[sz] and right[sz] contain sums of subsets of size sz.
+Detailed Explanation
+Outer Loop: Iterating Over Subset Sizes
+cpp
+Copy code
+for (int sz = 1; sz < N; ++sz) {
+Purpose: Iterate over subset sizes from 1 to N-1. The reason for not including 0 or N:
+sz = 0: Corresponds to an empty subset, which isn't useful here.
+sz = N: This case is handled separately outside the loop because it requires comparing the full sum of the left and right halves directly.
+Inner Loop: Iterating Over Subset Sums for a Given Size
+cpp
+Copy code
+for (auto &a : left[sz]) {
+Purpose: Iterate over each possible sum a of a subset of size sz from the left half of the array.
+Calculate Target Sum for Binary Search
+cpp
+Copy code
+int b = (sum - 2 * a) / 2;
+int rsz = N - sz;
+b: This is the target value we want to find in the right half. It is calculated as (sum - 2 * a) / 2, where:
+
+sum is the total sum of the entire array.
+a is the sum of the current subset from the left half.
+The goal is to find a sum b in the right half such that the total sum 2 * (a + b) is close to sum.
+rsz: The size of the subset in the right half that complements the subset size sz from the left half to make a full subset of size N.
+
+Binary Search in the Right Half
+cpp
+Copy code
+auto &v = right[rsz];
+auto itr = lower_bound(v.begin(), v.end(), b);
+v: Reference to the vector right[rsz], which contains all possible sums of subsets of size rsz from the right half.
+lower_bound: Performs a binary search on the sorted vector v to find the first element that is not less than b.
+If b exists in v, itr will point to it.
+If b does not exist, itr will point to the first element greater than b.
+Check and Update the Result
+cpp
+Copy code
+if (itr != v.end()) res = min(res, abs(sum - 2 * (a + (*itr))));
+Purpose: If a valid element is found in v (i.e., itr is not at the end of the vector), calculate the potential minimum difference using this element.
+Calculation: abs(sum - 2 * (a + (*itr))) gives the difference between sum and twice the sum of the subsets a and *itr. The min function updates res if this difference is smaller than the current res.
+Check the Previous Element (if applicable)
+cpp
+Copy code
+if (itr != v.begin()) {
+    auto it = itr; --it;
+    res = min(res, abs(sum - 2 * (a + (*it))));
+}
+Purpose: If itr is not pointing to the first element in v, check the previous element to see if it gives a smaller difference.
+Explanation:
+Decrement itr to get the previous element.
+Calculate the difference using this previous element and update res if this difference is smaller.
+Summary of This Code Block
+Goal: Find the best matching subset sum b from the right half for each subset sum a from the left half, so that the difference between sum and 2 * (a + b) is minimized.
+Steps:
+Iterate over possible subset sizes from 1 to N-1.
+For each subset sum a of size sz from the left half, compute a target sum b for the right half.
+Use binary search to efficiently find the closest possible sum b in the right half.
+Update the minimum difference (res) using both the closest element found by lower_bound and its immediate predecessor (if it exists).
+This technique leverages the efficiency of binary search to ensure that the algorithm performs well even for larger input sizes.
+
+
+
+3) int b = (sum - 2 * a) / 2;
+int rsz = N - sz;
+
+
+The goal is to split the array into two subsets, each of size N, such that the difference between their sums is minimized. Let's walk through why we want to find a subset in the right half whose sum is close to 3 in the given example.
+
+Example Breakdown
+sum: The total sum of all elements in the array is 20.
+N: Half the size of the array. Let's assume N = 4, so the array has 8 elements.
+Goal
+We want to divide the array into two subsets of size 4 such that the difference between their sums is minimized.
+
+Let's Consider:
+Suppose you have selected a subset from the left half of the array with a sum a = 7.
+The sum of the elements in the other half (from the right half of the array) should ideally balance the total sum when combined with a.
+Why Look for b ≈ 3?
+The total sum of the array is 20.
+We want to split the array such that each subset has a sum close to 10 (sum / 2 = 10), because if each subset has a sum close to 10, the difference between the sums will be minimal.
+Deriving the Target b
+Balance the Sums:
+
+You already have a subset sum a = 7 from the left half.
+Now, you need to find a subset sum b from the right half such that the sum a + b is as close as possible to 10.
+Set Up the Equation:
+
+You want a + b ≈ 10 (since 10 is half of 20).
+So, b ≈ 10 - a = 10 - 7 = 3.
+This is why you are searching for a subset in the right half with a sum close to 3. Finding this b ≈ 3 ensures that a + b is as close as possible to 10, balancing the two subsets.
+
+Formula
+The formula b = (sum - 2 * a) / 2 generalizes this idea:
+
+sum - 2 * a gives you the difference between sum and 2 * a.
+Dividing by 2 gives you the target sum b that would help bring a + b close to sum / 2.
+Conclusion
+By finding b ≈ 3, the sum a + b becomes 10, which is half of the total sum. This minimizes the difference between the two subset sums, achieving the goal of the algorithm.
+
+
+
+
+
