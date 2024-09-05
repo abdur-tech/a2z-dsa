@@ -1,0 +1,63 @@
+
+Target Sum
+
+You are given an integer array nums and an integer target.
+
+You want to build an expression out of nums by adding one of the symbols '+' and '-' before each integer in nums and then concatenate all the integers.
+
+For example, if nums = [2, 1], you can add a '+' before 2 and a '-' before 1 and concatenate them to build the expression "+2-1".
+Return the number of different expressions that you can build, which evaluates to target.
+
+ 
+
+Example 1:
+
+Input: nums = [1,1,1,1,1], target = 3
+Output: 5
+Explanation: There are 5 ways to assign symbols to make the sum of nums be target 3.
+-1 + 1 + 1 + 1 + 1 = 3
++1 - 1 + 1 + 1 + 1 = 3
++1 + 1 - 1 + 1 + 1 = 3
++1 + 1 + 1 - 1 + 1 = 3
++1 + 1 + 1 + 1 - 1 = 3
+Example 2:
+
+Input: nums = [1], target = 1
+Output: 1
+ 
+
+Intuition
+We have to make a choice at every index, whether to add that element or subtract it. We have to use dynamic programming in order to meet time and memory constraints. Problem arises when we have to handle negative indices of dp.
+
+Approach
+We simply add an offset to address this problem. How?. The lowest -ve index is possible when we take subtract all elements and the highest is possible if we add all elements. So we take column size = 2*sum + 1.
+We simply add this offset value to make negative indices positive.
+
+
+
+class Solution {
+public:
+    int solve(vector<int>& nums, int target, int index, int ans, vector<vector<int>> &dp, int offset) {
+        if (index == nums.size()) {
+            return ans == target ? 1 : 0;
+        }
+
+        if (dp[index][ans + offset] != -1) {
+            return dp[index][ans + offset];
+        }
+
+        int include = solve(nums, target, index + 1, ans + nums[index], dp, offset);
+        int exclude = solve(nums, target, index + 1, ans - nums[index], dp, offset);
+
+        return dp[index][ans + offset] = include + exclude;
+    }
+
+    int findTargetSumWays(vector<int>& nums, int target) {
+        int n = nums.size();
+        int sum = accumulate(nums.begin(), nums.end(), 0);
+        int offset = sum; // offset to handle negative indices
+
+        vector<vector<int>> dp(n, vector<int>(2 * sum + 1, -1)); // size adjusted for negative ans
+        return solve(nums, target, 0, 0, dp, offset);
+    }
+};
