@@ -1,0 +1,88 @@
+Print all LCS sequences
+
+
+You are given two strings s and t. Now your task is to print all longest common sub-sequences in lexicographical order.
+
+Note -  A Sub-sequence is derived from another string by deleting some or none of the elements without changing the order of the remaining elements.
+
+
+Example 1:
+
+Input: s = abaaa, t = baabaca
+Output: aaaa abaa baaa
+Explanation - Length of lcs is 4, in lexicographical order they are aaaa, abaa, baaa
+
+Example 2:
+
+Input: s = aaa, t = a
+Output: a
+
+
+class Solution {
+  public:
+  
+    void solve(int i, int j, string s, string t, string temp, vector<vector<int>>& dp, set<string>& lcs, unordered_map<string,bool>& vis) {
+    if (i == 0 || j == 0) {
+        //reverse(temp.begin(), temp.end());
+        lcs.insert(temp);
+        return;
+    } 
+
+    string key = to_string(i) + "," + to_string(j) + "," + temp;
+    if (vis.find(key) != vis.end()) {
+        return;
+    }
+    vis[key] = true;
+
+    if (s[i - 1] == t[j - 1]) {
+        solve(i - 1, j - 1, s, t, s[i - 1]+temp, dp, lcs, vis);
+    } else {
+        if (dp[i - 1][j] == dp[i][j]) {
+            solve(i - 1, j, s, t, temp, dp, lcs, vis);
+        }
+        if (dp[i][j - 1] == dp[i][j]) {
+            solve(i, j - 1, s, t, temp, dp, lcs, vis);
+        }
+    }
+}
+
+vector<string> all_longest_common_subsequences(string s, string t) {
+    int n = s.length(), m = t.length();
+    vector<vector<int>> dp(n + 1, vector<int>(m + 1, 0));
+
+    // DP table calculation
+    for (int i = 1; i <= n; i++) {
+        for (int j = 1; j <= m; j++) {
+            if (s[i - 1] == t[j - 1]) {
+                dp[i][j] = 1 + dp[i - 1][j - 1];
+            } else {
+                dp[i][j] = max(dp[i - 1][j], dp[i][j - 1]);
+            }
+        }
+    }
+
+    set<string> lcs;
+    unordered_map<string,bool> vis;
+
+    // Start backtracking from the bottom-right corner
+    solve(n, m, s, t, "", dp, lcs, vis);
+
+    vector<string> res(lcs.begin(), lcs.end());
+    return res;
+}
+
+};
+
+Key Functions
+solve(i, j, s, t, temp, dp, lcs, vis):
+
+Recursively builds the LCS using backtracking, considering both directions in the DP matrix if there are multiple ways to get the same LCS length.
+If s[i-1] == t[j-1], it adds s[i-1] to temp and moves diagonally (i.e., both i and j are decremented).
+If s[i-1] != t[j-1], it checks both possibilities: moving either up (i-1) or left (j-1), but only if the DP value doesn't change (i.e., both paths can yield the same LCS length).
+Uses the vis map to ensure that it doesn't revisit the same state (identified by a key comprising i, j, and the current temp).
+all_longest_common_subsequences(s, t):
+
+Builds the dp table, where dp[i][j] represents the length of the LCS between s[0..i-1] and t[0..j-1].
+Once the DP table is complete, it identifies all the points in the table where the value is equal to the LCS length and calls the solve function for each such point.
+The solve function fills a set<string> called lcs with all unique LCS subsequences found.
+Converts the set to a vector and returns the result.
