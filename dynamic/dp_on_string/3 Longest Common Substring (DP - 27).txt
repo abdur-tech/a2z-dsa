@@ -1,0 +1,103 @@
+Longest Common Substring | (DP - 27)
+
+You are given two strings str1 and str2. Your task is to find the length of the longest common substring among the given strings.
+
+Examples:
+
+Input: str1 = "ABCDGH", str2 = "ACDGHR"
+Output: 4
+Explanation: The longest common substring is "CDGH" which has length 4.
+Input: str1 = "ABC", str2 = "ACB"
+Output: 1
+Explanation: The longest common substrings are "A", "B", "C" all having length 1.
+Expected Time Complexity: O(n*m).
+Expected Auxiliary Space: O(n*m).
+
+//{ Driver Code Starts
+#include <bits/stdc++.h>
+using namespace std;
+
+
+// } Driver Code Ends
+class Solution {
+  int ans = 0;
+int solve(int i, int j, string &s1, string &s2, vector<vector<int>> &dp){
+    if (i >= s1.size() || j >= s2.size())
+        return 0;
+    if (dp[i][j] != -1)
+        return dp[i][j];
+    int take = 0;
+    if (s1[i] == s2[j]){
+        take = 1 + solve(i + 1, j + 1, s1, s2, dp);
+        ans = max(ans, take);
+    }
+    int exc1 = solve(i + 1, j, s1, s2, dp);
+    int exc2 = solve(i, j + 1, s1, s2, dp);
+    return dp[i][j] = take;
+}
+  public:
+    //memoization;
+    int _longestCommonSubstr(string str1, string str2) {
+        // your code here
+        int n = str1.size();
+        int m = str2.size();
+        vector<vector<int>> dp(n + 1, vector<int>(m + 1, -1));
+        solve(0, 0, str1, str2, dp);
+        return ans;
+    }
+    
+    
+    //Tabulation
+    int longestCommonSubstr(string str1, string str2) {
+    // Get the lengths of both input strings
+    int n = str1.size();
+    int m = str2.size();
+    
+    // Create a 2D vector (DP table) to store the length of the longest common substring
+    // dp[i][j] will represent the length of the longest common substring that ends at str1[i-1] and str2[j-1]
+    vector<vector<int>> dp(n+1, vector<int>(m+1, 0));
+    
+    // Variable to store the maximum length of the common substring found
+    int ans = 0;
+    
+    // Loop through all characters of str1 (from 1 to n)
+    for(int i = 1; i <= n; i++) {
+        // Loop through all characters of str2 (from 1 to m)
+        for(int j = 1; j <= m; j++) {
+            
+            // If characters match (str1[i-1] == str2[j-1]), extend the common substring
+            if (str1[i-1] == str2[j-1]) {
+                
+                // Add 1 to the previous diagonal value dp[i-1][j-1]
+                dp[i][j] = 1 + dp[i-1][j-1];
+                
+                // Update the maximum length of the common substring found so far
+                ans = max(ans, dp[i][j]);
+            } else {
+                // If characters don't match, reset dp[i][j] to 0
+                // Since no common substring can end at these characters
+                dp[i][j] = 0;
+            }
+        }
+    }
+    
+    // Return the maximum length of the common substring found
+    return ans;
+}
+};
+
+
+//{ Driver Code Starts.
+
+int main() {
+    int t;
+    cin >> t;
+    while (t--) {
+        string s1, s2;
+        cin >> s1 >> s2;
+        Solution ob;
+
+        cout << ob.longestCommonSubstr(s1, s2) << endl;
+    }
+}
+// } Driver Code Ends
