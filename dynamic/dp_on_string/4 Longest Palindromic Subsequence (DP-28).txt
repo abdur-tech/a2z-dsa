@@ -1,0 +1,58 @@
+Longest Palindromic Subsequence | (DP-28)
+
+
+Given a string s, find the longest palindromic subsequence's length in s.
+
+A subsequence is a sequence that can be derived from another sequence by deleting some or no elements without changing the order of the remaining elements.
+
+ 
+
+Example 1:
+
+Input: s = "bbbab"
+Output: 4
+Explanation: One possible longest palindromic subsequence is "bbbb".
+Example 2:
+
+Input: s = "cbbd"
+Output: 2
+Explanation: One possible longest palindromic subsequence is "bb".
+ 
+
+ #include<bits/stdc++.h>
+class Solution {
+public:
+    int f(int ind1,int ind2,string &s,vector<vector<int>>& dp)
+    {
+        if(ind1<0 || ind2>=s.size()) return 0;
+        if(dp[ind1][ind2]!=-1) return dp[ind1][ind2];
+        int taken = 0;
+        int notaken = 0;
+        if(s[ind1]==s[ind2]) taken = 1+f(ind1-1,ind2+1,s,dp);
+        notaken = max(f(ind1-1,ind2,s,dp),f(ind1,ind2+1,s,dp));
+        return dp[ind1][ind2]=max(taken,notaken);
+    }
+    //memoization
+    int _longestPalindromeSubseq(string s) {
+        int n = s.size();
+        vector<vector<int>> dp(n+1,vector<int>(n+1,-1));
+        return f(n-1,0,s,dp);
+    };
+    int longestPalindromeSubseq(string s) {
+        int n = s.size();
+        vector<vector<int>> dp(n+1,vector<int>(n+1,0));
+        string t = s;
+        reverse(t.begin(),t.end());
+        for(int i = 1;i<=n;i++)
+        {
+            for(int j = 1;j<=n;j++)
+            {
+                if(s[i-1]==t[j-1]){
+                    dp[i][j]=1+dp[i-1][j-1];
+                }
+                else dp[i][j] = max(dp[i-1][j],dp[i][j-1]);
+            }
+        }
+        return dp[n][n];
+    };
+};
