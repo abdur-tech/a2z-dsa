@@ -1,0 +1,58 @@
+Minimum Insertions/Deletions to Convert String | (DP- 30)
+
+Given two strings word1 and word2, return the minimum number of steps required to make word1 and word2 the same.
+
+In one step, you can delete exactly one character in either string.
+
+ 
+
+Example 1:
+
+Input: word1 = "sea", word2 = "eat"
+Output: 2
+Explanation: You need one step to make "sea" to "ea" and another step to make "eat" to "ea".
+Example 2:
+
+Input: word1 = "leetcode", word2 = "etco"
+Output: 4
+ 
+
+Constraints:
+
+1 <= word1.length, word2.length <= 500
+word1 and word2 consist of only lowercase English letters.
+
+Approach:
+
+The algorithm is stated as follows:
+
+Let n and m be the length of str1 and str2 respectively.
+Find the length of the longest common subsequence ( say k) of str1 and str2 as discussed in  Longest Common Subsequence.
+Return (n-k) + (m-k) as answer.
+
+class Solution {
+public:
+    int longestPalindromeSubseq(string s,string t) {
+        int n = s.size();
+        int m = t.size();
+        vector<vector<int>> dp(n+1,vector<int>(m+1,0));
+        for(int i = 1;i<=n;i++)
+        {
+            for(int j = 1;j<=m;j++)
+            {
+                if(s[i-1]==t[j-1]){
+                    dp[i][j]=1+dp[i-1][j-1];
+                }
+                else dp[i][j] = max(dp[i-1][j],dp[i][j-1]);
+            }
+        }
+        return dp[n][m];
+    };
+    int minDistance(string word1, string word2) {
+        if(word1==word2) return 0;
+        if(word1.size()==1 && word2.size()==1) return 2;
+        int n = longestPalindromeSubseq(word1,word2);
+        cout<<n;
+        return word1.size()+word2.size()-(2*n);
+    }
+};
