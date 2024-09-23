@@ -25,6 +25,13 @@ Constraints:
 1 <= str1.length, str2.length <= 1000
 str1 and str2 consist of lowercase English letters.
 
+Length of Shortest Common Supersequence?
+From the explanation above, we can see that characters of lcs need to be covered only once. Therefore, the length of the shortest Common supersequence = n + m -k, where (n and m are lengths of S1 and S2, and k is the length of the lcs string).
+
+Intuition:
+When we form the DP table to calculate the longest common subsequence (as done in Print Longest Common Subsequence) we have all the information of characters that are coming in the lcs string and characters that don’t. We use this same DP table to form the shortest common supersequence.
+
+
 
 class Solution {
 public:
