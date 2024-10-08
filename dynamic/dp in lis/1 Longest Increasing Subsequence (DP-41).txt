@@ -41,3 +41,47 @@ public:
      return f(0,-1,nums,dp);   
     }
 };
+//Tabulation
+int lengthOfLIS(vector<int>& nums) {
+     int n = nums.size();
+     vector<vector<int>> dp(n+1,vector<int>(n+2,0));
+     for(int ind=n-1;ind>=0;ind--)
+     {
+        for(int prev=ind-1;prev>=-1;prev--){
+            int taken = 0;
+            int notaken = 0;
+            if(prev==-1 || nums[ind]>nums[prev])
+            {
+                taken = 1 +dp[ind+1][ind+1];
+            }
+            notaken =dp[ind+1][prev+1];
+            dp[ind][prev+1]=max(taken,notaken);
+        }
+     }
+     return dp[0][0];
+
+    }
+
+//Space optimization
+    int lengthOfLIS(vector<int>& nums) {
+     int n = nums.size();
+     vector<int> curr(n+2,0);
+     vector<int> prevarr(n+2,0);
+     for(int ind=n-1;ind>=0;ind--)
+     {
+        for(int prev=ind-1;prev>=-1;prev--)
+        {
+            int taken = 0;
+            int notaken = 0;
+            if(prev==-1 || nums[ind]>nums[prev])
+            {
+                taken = 1 +prevarr[ind+1];
+            }
+            notaken =prevarr[prev+1];
+
+            curr[prev+1]=max(taken,notaken);
+        }
+        prevarr = curr;
+     }
+     return curr[0];
+    }
