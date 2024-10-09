@@ -1,0 +1,106 @@
+Print Longest Increasing Subsequence
+
+Given an integer n and an array of integers arr, return the Longest Increasing Subsequence which is Index-wise lexicographically smallest.
+Note - A subsequence S1 is Index-wise lexicographically smaller than a subsequence S2 if in the first position where S1 and S2 differ, subsequence S1 has an element that appears earlier in the array  arr than the corresponding element in S2.
+LIS  of a given sequence is defined as that longest possible subsequence all of whose elements are in increasing order. For example, the length of LIS for {10, 22, 9, 33, 21, 50, 41, 60, 80} is 6 and the LIS is {10, 22, 33, 50, 60, 80}. 
+
+Example 1:
+
+Input:
+n = 16
+arr = [0,8,4,12,2,10,6,14,1,9,5,13,3,11,7,15]
+Output:
+0 4 6 9 13 15 
+Explanation:
+longest Increasing subsequence is 0 4 6 9 13 15  and the length of the longest increasing subsequence is 6.
+Example 2:
+
+Input:
+n = 1
+arr = [1]
+Output:
+1
+
+//{ Driver Code Starts
+#include <bits/stdc++.h>
+using namespace std;
+
+
+// } Driver Code Ends
+class Solution {
+  public:
+    vector<int> longestIncreasingSubsequence(int n, vector<int>& arr) {
+        vector<int> dp(n,1);
+        vector<int> hash(n);
+        int maxi = -1;
+        int maxi_ind = 0;
+        for(int i = 0;i<n;i++)
+            {
+                hash[i]=i;
+               for(int prev = 0;prev<=i-1;prev++){
+                   
+                   if(arr[i]>arr[prev] && dp[i]<1+dp[prev]){
+                       dp[i] = 1+dp[prev];
+                       hash[i] = prev;
+                   }
+               }
+               if(dp[i]>maxi){
+                   maxi=dp[i];
+                   maxi_ind=i;
+               }
+        }
+        vector<int> ans;
+        ans.push_back(arr[maxi_ind]);
+        while(hash[maxi_ind]!=maxi_ind){
+            maxi_ind = hash[maxi_ind];
+            ans.push_back(arr[maxi_ind]);
+        }
+        reverse(ans.begin(),ans.end());
+        return ans;
+    }
+};
+
+//{ Driver Code Starts.
+
+int main() {
+    int t;
+    cin >> t;
+    while (t--) {
+        int N;
+        cin >> N;
+        vector<int> arr(N);
+        for (int i = 0; i < N; i++) {
+            cin >> arr[i];
+        }
+        Solution obj;
+        vector<int> res = obj.longestIncreasingSubsequence(N, arr);
+        for (auto x : res)
+            cout << x << " ";
+        cout << "\n";
+    }
+    return 0;
+}
+// } Driver Code Ends
+
+
+
+For every index i of the array ‘arr’;
+dp[ i ] is the length of the longest increasing subsequence that is possible that end with index ind of the original array.
+
+Few examples:
+
+(i) For i = 0, dp[i] =1 , therefore LIS length with the element arr[0], i.e 5 as its last element is 1. The case :[ 5 ].
+
+(ii) For i = 4, dp[i] =3 , therefore LIS length with the element arr[4], i.e 16 as its last element is 3. The case :[ 5, 11, 16 ].
+
+Once we get this dp array our job is to simply return the maximum cell value of the entire array as the length of the longest increasing subsequence.
+
+Now, the main question arises: how do we get this dp[ ] array? The following section explains the logic and the approach.
+
+Part 3: Printing the LIS
+
+In order to print the LIS, we maintain a separate array along with a dp array (say hash).
+
+Whenever we update our dp[i] value in the inner loop, we know that for index i, the previous index is prev_index. Therefore we simply store prev_index to hash[ i ]. In this way, we will have a way to trace back the LIS.
+
+Whenever we have computed the entire dp array and we find the maximum value in it. We store that maximum value’s index in a variable ( say last_index). Now with this last_index, and the hash array we can trace back the LIS elements.
