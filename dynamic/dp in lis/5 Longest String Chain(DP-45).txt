@@ -1,0 +1,86 @@
+Longest String Chain|(DP-45)
+
+
+Prerequisite:
+
+Longest Increasing Subsequence
+Printing longest increasing subsequence
+
+
+
+You are given an array of words where each word consists of lowercase English letters.
+
+wordA is a predecessor of wordB if and only if we can insert exactly one letter anywhere in wordA without changing the order of the other characters to make it equal to wordB.
+
+For example, "abc" is a predecessor of "abac", while "cba" is not a predecessor of "bcad".
+A word chain is a sequence of words [word1, word2, ..., wordk] with k >= 1, where word1 is a predecessor of word2, word2 is a predecessor of word3, and so on. A single word is trivially a word chain with k == 1.
+
+Return the length of the longest possible word chain with words chosen from the given list of words.
+
+ 
+
+Example 1:
+
+Input: words = ["a","b","ba","bca","bda","bdca"]
+Output: 4
+Explanation: One of the longest word chains is ["a","ba","bda","bdca"].
+Example 2:
+
+Input: words = ["xbc","pcxbcf","xb","cxbc","pcxbc"]
+Output: 5
+Explanation: All the words can be put in a word chain ["xb", "xbc", "cxbc", "pcxbc", "pcxbcf"].
+Example 3:
+
+Input: words = ["abcd","dbqca"]
+Output: 1
+Explanation: The trivial word chain ["abcd"] is one of the longest word chains.
+["abcd","dbqca"] is not a valid word chain because the ordering of the letters is changed.
+
+
+class Solution {
+public:
+    static bool comp(string& s1, string& s2){
+        return s1.size() < s2.size();
+    }
+    bool isPredecessor(string& wordA,string& wordB) {
+        // Check if the lengths are correct
+        if (wordA.size() + 1 != wordB.size()) {
+            return false;
+        }
+        int i = 0, j = 0; // Pointers for wordA and wordB
+        bool mismatch_found = false; // To track if we found the insertion point
+        // Traverse through both words
+        while (i < wordA.size() && j < wordB.size()) {
+            if (wordA[i] == wordB[j]) {
+                i++; // Characters match, move both pointers
+            } else {
+                if (mismatch_found) {
+                    // Already found a mismatch before, so not a valid predecessor
+                    return false;
+                }
+                mismatch_found = true; // Found the place where a character could be inserted
+            }
+            j++; // Always move the pointer for wordB
+        }
+        // If we exited the loop, wordA can be made into wordB with exactly one insertion
+        return true;
+    }
+    int longestStrChain(vector<string>& words) {
+        int n = words.size();
+        sort(words.begin(),words.end(),comp);
+        vector<int> dp(n+1,1);
+       int maxi = -1;
+       for(int i = 0;i<n;i++)
+       {
+           for(int prev = 0;prev<=i-1;prev++){
+               
+               if(isPredecessor(words[prev],words[i])){
+                   dp[i] = max(dp[i],1+dp[prev]);
+               }
+           }
+           maxi=max(maxi,dp[i]);
+       }
+       return maxi;
+    }
+};
+
