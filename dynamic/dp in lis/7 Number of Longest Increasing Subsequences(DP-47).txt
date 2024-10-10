@@ -1,0 +1,52 @@
+Number of Longest Increasing Subsequences|(DP-47)
+
+Given an integer array nums, return the number of longest increasing subsequences.
+
+Notice that the sequence has to be strictly increasing.
+
+ 
+
+Example 1:
+
+Input: nums = [1,3,5,4,7]
+Output: 2
+Explanation: The two longest increasing subsequences are [1, 3, 4, 7] and [1, 3, 5, 7].
+Example 2:
+
+Input: nums = [2,2,2,2,2]
+Output: 5
+Explanation: The length of the longest increasing subsequence is 1, and there are 5 increasing subsequences of length 1, so output 5.
+
+
+Approach:
+
+If we closely see the example we see two patterns for the nested loop conditions. We will always consider element at prev_index( say j) to place before element at index i only if arr[j] < arr[i]. Now, there arises two conditions:
+
+if( arr[j] < arr[i] && dp[j+1] > dp[i]), in this case we get a new LIS of greater length, therefore the number of LIS ending at arr[i], is the same as number of LIS ending at arr[j] as we simply append the element arr[j] to all those LIS. In simple terms, ct[i] = ct[j]. Try to dry run this example to understand: [1, 2, 3],
+if( arr[j] < arr[i] && dp[j+1]==dp[i]) in this case we get a new LIS of same length at which the ct[i] is originally holding the value for. Therefore the new ct[j] value will be the number of LIS that was given by its original value plus the number of LIS that ends at element arr[j] at length dp[j]. In simple terms, ct[i] = ct[i] + ct[j]. Try to dry run this example to understand: [1, 5, 6, 10].
+Based on these two conditions we can easily calculate the ct[ ]n array and return the ct[ ] value for the maximum value(s) of the dp[ ] array.
+
+class Solution {
+public:
+    int findNumberOfLIS(vector<int>& nums) {
+        int maxi = -1;
+        vector<int> dp(nums.size(),1);
+        vector<int> cnt(nums.size(),1);
+        for(int i = 0;i<nums.size();i++){
+            for(int prev = 0;prev<=i-1;prev++){
+                if(nums[i]>nums[prev] && dp[i]<1+dp[prev]){
+                    dp[i] = 1+dp[prev];
+                    cnt[i] = cnt[prev];
+                }
+                else if(nums[i]>nums[prev] && dp[i]==1+dp[prev]){
+                    cnt[i]+=cnt[prev];
+                }
+            }
+            maxi = max(maxi,dp[i]);
+        }
+        int ans = 0;
+        for(int i = 0;i<nums.size();i++) if(dp[i]==maxi) ans+=cnt[i];
+        return ans; 
+    }
+
+};
