@@ -1,0 +1,61 @@
+Matrix Chain Multiplication|(DP-48)
+
+Given a sequence of matrices, find the most efficient way to multiply these matrices together. The efficient way is the one that involves the least number of multiplications.
+
+The dimensions of the matrices are given in an array arr[] of size N (such that N = number of matrices + 1) where the ith matrix has the dimensions (arr[i-1] x arr[i]).
+
+
+Example 1:
+
+Input: N = 5
+arr = {40, 20, 30, 10, 30}
+Output: 26000
+Explanation: There are 4 matrices of dimension 
+40x20, 20x30, 30x10, 10x30. Say the matrices are 
+named as A, B, C, D. Out of all possible combinations,
+the most efficient way is (A*(B*C))*D. 
+The number of operations are -
+20*30*10 + 40*20*10 + 40*10*30 = 26000.
+
+Example 2:
+
+Input: N = 4
+arr = {10, 30, 5, 60}
+Output: 4500
+Explanation: The matrices have dimensions 
+10*30, 30*5, 5*60. Say the matrices are A, B 
+and C. Out of all possible combinations,the
+most efficient way is (A*B)*C. The 
+number of multiplications are -
+10*30*5 + 10*5*60 = 4500.
+
+
+Matrix Chain Multiplication | Partition DP Starts
+
+In the coming articles, we will discuss problems related to a new pattern called “Partition DP”.Before proceeding further, let us understand how to identify whether a problem can be solved using this pattern.
+
+Pattern Identification:
+
+Whenever we need to find the answer to a large problem such that the problem can be broken into subproblems and the final answer varies due to the order in which the subproblems are solved, we can think in terms of partition DP.
+
+
+
+class Solution{
+public:
+    // Memoization
+    int f(int i,int j,int arr[],vector<vector<int>> &dp){
+        if(i==j) return 0;
+        if(dp[i][j]!=-1) return dp[i][j];
+        int mini = INT_MAX;
+        for(int k=i;k<=j-1;k++){
+            int steps = arr[i-1] * arr[k] * arr[j] + f(i,k,arr,dp) + f(k+1,j,arr,dp);
+            mini = min(mini,steps);
+        }
+        return dp[i][j]=mini;
+    }
+    int matrixMultiplication(int N, int arr[])
+    {
+        vector<vector<int>> dp(N,vector<int>(N,-1));
+        return f(1,N-1,arr,dp);
+    }
+};
