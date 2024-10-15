@@ -1,0 +1,159 @@
+Evaluate Boolean Expression to True|(DP-52)
+
+Problem statement
+You are given an expression 'exp' in the form of a string where operands will be : (TRUE or FALSE), and operators will be : (AND, OR or XOR).
+
+
+
+Now you have to find the number of ways we can parenthesize the expression such that it will evaluate to TRUE.
+
+
+
+As the answer can be very large, return the output modulo 1000000007.
+
+
+
+Note :
+
+‘T’ will represent the operand TRUE.
+‘F’ will represent the operand FALSE.
+‘|’ will represent the operator OR.
+‘&’ will represent the operator AND.
+‘^’ will represent the operator XOR.
+Example :
+
+Input: 'exp’ = "T|T & F".
+
+Output: 1
+
+Explanation:
+There are total 2  ways to parenthesize this expression:
+    (i) (T | T) & (F) = F
+    (ii) (T) | (T & F) = T
+Out of 2 ways, one will result in True, so we will return 1.
+
+Sample Input 1 :
+T^T^F    
+Sample Output 1 :
+0
+Explanation For Sample Input 1:
+There are total 2  ways to parenthesize this expression:
+(i) (T^T)^(F) = F
+(ii) (T)^(T^F) = F
+Both ways will result in False, so we will return 0.
+Sample Input 2 :
+F|T^F
+Sample Output 2 :
+2
+Explanation For Sample Input 2:
+For the first test case:
+There are total 2  ways to parenthesize this expression:
+(i) (F|T)^(F) = T
+(ii) (F)|(T^F) = T
+Both ways will result in True, so we will return 2.
+Expected time complexity
+The expected time complexity is O(n ^ 3), where 'n' denotes the length of 'exp'.
+Constraints:
+3 <= |‘exp’| <= 200
+Where |'exp'| denotes the length of 'exp'.
+
+Time Limit: 1 sec
+
+const int mod = 1000000007;
+#define ll long long
+int f(int i,int j,string &exp,int isTrue,vector<vector<vector<ll>>> &dp){
+    if(i>j) return 0;
+    if(i==j){
+        if(isTrue==1) return exp[i]=='T';
+        else return exp[i]=='F';
+    }
+    if(dp[i][j][isTrue]!=-1) return dp[i][j][isTrue];
+    ll ways = 0;
+    for(int ind=i+1;ind<=j-1;ind++){
+        ll LF = f(i,ind-1,exp,0,dp);
+        ll LT = f(i,ind-1,exp,1,dp);
+        ll RF = f(ind+1,j,exp,0,dp);
+        ll RT = f(ind+1,j,exp,1,dp);
+        
+        if(exp[ind]=='&'){
+            if(isTrue) ways=(ways+ (LT * RT)%mod)%mod;
+            else ways= (ways+ ((LT*RF)%mod + (LF*RT)%mod + (LF*RF)%mod))%mod;
+        }
+        else if(exp[ind]=='|'){
+            if(isTrue) ways= (ways + ((LT * RT)%mod + (LF*RT)%mod + (LT*RF)%mod))%mod;
+            else ways= (ways+(LF*RF)%mod)%mod;
+        }
+        else if(exp[ind]=='^'){
+            if(isTrue) ways=( ways + (LT * RF)%mod + (LF * RT)%mod)%mod;
+            else ways= (ways+((LT*RT) + (LF*RF))%mod)%mod;
+        }
+    }
+    return dp[i][j][isTrue]=ways;
+}
+//Memorixation
+int evaluateExp(string & exp) {
+    int n = exp.size();
+    vector<vector<vector<ll>>> dp(n, vector<vector<ll>>(n, vector<ll>(2, -1)));
+    return f(0,n-1,exp,1,dp);
+}
+
+
+//Tabulation
+
+#include <bits/stdc++.h>
+using namespace std;
+
+#define ll long long
+const int mod = 1000000007;
+
+int evaluateExp(string &exp) {
+    int n = exp.size();
+    vector<vector<vector<ll>>> dp(n, vector<vector<ll>>(n, vector<ll>(2, 0)));
+    
+    for (int i = n - 1; i >= 0; i--) {
+        for (int j = 0; j <= n - 1; j++) {
+            // Base case 1: i > j is an invalid case, so continue.
+            if (i > j) continue;
+            
+            for (int isTrue = 0; isTrue <= 1; isTrue++) {
+                // Base case 2: i == j, evaluate the single character.
+                if (i == j) {
+                    if (isTrue == 1) dp[i][j][isTrue] = exp[i] == 'T';
+                    else dp[i][j][isTrue] = exp[i] == 'F';
+                    continue;
+                }
+
+                // Recurrence logic:
+                ll ways = 0;
+                for (int ind = i + 1; ind <= j - 1; ind += 2) {
+                    ll lT = dp[i][ind - 1][1];
+                    ll lF = dp[i][ind - 1][0];
+                    ll rT = dp[ind + 1][j][1];
+                    ll rF = dp[ind + 1][j][0];
+
+                    if (exp[ind] == '&') {
+                        if (isTrue) ways = (ways + (lT * rT) % mod) % mod;
+                        else ways = (ways + (lF * rT) % mod + (lT * rF) % mod + (lF * rF) % mod) % mod;
+                    }
+                    else if (exp[ind] == '|') {
+                        if (isTrue) ways = (ways + (lF * rT) % mod + (lT * rF) % mod + (lT * rT) % mod) % mod;
+                        else ways = (ways + (lF * rF) % mod) % mod;
+                    }
+                    else {
+                        if (isTrue) ways = (ways + (lF * rT) % mod + (lT * rF) % mod) % mod;
+                        else ways = (ways + (lF * rF) % mod + (lT * rT) % mod) % mod;
+                    }
+                }
+                dp[i][j][isTrue] = ways;
+            }
+        }
+    }
+    return dp[0][n - 1][1];
+}
+
+int main() {
+    string exp = "F|T^F";
+    int ways = evaluateExp(exp);
+    cout << "The total number of ways: " << ways << "\n";
+    return 0;
+}
