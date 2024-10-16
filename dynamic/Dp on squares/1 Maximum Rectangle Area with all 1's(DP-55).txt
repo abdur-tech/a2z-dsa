@@ -1,0 +1,72 @@
+Maximum Rectangle Area with all 1's|(DP-55)
+
+Given a rows x cols binary matrix filled with 0's and 1's, find the largest rectangle containing only 1's and return its area.
+
+Example 1:
+
+
+
+Input: matrix = [["1","0","1","0","0"],["1","0","1","1","1"],["1","1","1","1","1"],["1","0","0","1","0"]]
+Output: 6
+Explanation: The maximal rectangle is shown in the above picture.
+
+
+class Solution {
+public:
+    int largestRectangleArea(vector<int>& heights) {
+        int n = heights.size();
+        vector<int> leftsmaller(n);
+        vector<int> rightsmaller(n);
+
+        //Findind left smaller;
+        stack<int> st1,st2;
+        for(int i = 0;i<n;i++)
+        {
+            while(!st1.empty() && heights[st1.top()]>=heights[i]){  //we are storing index
+                st1.pop();
+            }
+            if(!st1.empty()){
+                leftsmaller[i]=st1.top()+1;
+            }
+            else{
+                leftsmaller[i]=0;
+            }
+            st1.push(i);
+        }
+        //Findind right smaller;
+        for(int i = n-1;i>=0;i--)
+        {
+            while(!st2.empty() && heights[st2.top()]>=heights[i]){  //we are storing index
+                st2.pop();
+            }
+            if(!st2.empty()){
+                rightsmaller[i]=st2.top()-1;
+            }
+            else{
+                rightsmaller[i]=n-1;
+            }
+            st2.push(i);
+        }
+
+        int ans = 0;
+        for(int i = 0;i<n;i++)
+        {
+            ans = max(ans,(rightsmaller[i]-leftsmaller[i]+1)*heights[i]);
+        }
+        return ans;
+    }
+    int maximalRectangle(vector<vector<char>>& matrix) {
+        int n = matrix[0].size();
+        vector<int> heights(n,0);
+        int ans = INT_MIN;
+        for(int i = 0;i<matrix.size();i++){
+            for(int j = 0;j<n;j++){
+                if(matrix[i][j]=='0') heights[j]=0;
+                else heights[j] = heights[j]+1;
+            }
+            int count_of_current = largestRectangleArea(heights);
+            ans = max(ans,count_of_current);
+        }
+        return ans;
+    }
+};
