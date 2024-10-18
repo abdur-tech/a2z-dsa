@@ -1,0 +1,168 @@
+Longest String with All Prefixes
+
+Problem statement
+Ninja developed a love for arrays and strings so this time his teacher gave him an array of strings, ‘A’ of size ‘N’. Each element of this array is a string. The teacher taught Ninja about prefixes in the past, so he wants to test his knowledge.
+
+A string is called a complete string if every prefix of this string is also present in the array ‘A’. Ninja is challenged to find the longest complete string in the array ‘A’.If there are multiple strings with the same length, return the lexicographically smallest one and if no string exists, return "None".
+
+Note :
+String ‘P’ is lexicographically smaller than string ‘Q’, if : 
+
+1. There exists some index ‘i’ such that for all ‘j’ < ‘i’ , ‘P[j] = Q[j]’ and ‘P[i] < Q[i]’. E.g. “ninja” < “noder”.
+
+2. If ‘P’ is a prefix of string ‘Q’, e.g. “code” < “coder”.
+Example :
+N = 4
+A = [ “ab” , “abc” , “a” , “bp” ] 
+
+Explanation : 
+
+Only prefix of the string “a” is “a” which is present in array ‘A’. So, it is one of the possible strings.
+
+Prefixes of the string “ab” are “a” and “ab” both of which are present in array ‘A’. So, it is one of the possible strings.
+
+Prefixes of the string “bp” are “b” and “bp”. “b” is not present in array ‘A’. So, it cannot be a valid string.
+
+Prefixes of the string “abc” are “a”,“ab” and “abc” all of which are present in array ‘A’. So, it is one of the possible strings.
+
+We need to find the maximum length string, so “abc” is the required string.
+
+
+Sample Input 1 :
+2
+6
+n ni nin ninj ninja ninga
+2
+ab bc
+Sample Output 1 :
+ninja
+None
+Explanation Of Sample Input 1 :
+For test case 1 we have, 
+
+All the prefixes of “ninja” -> “n”, “ni”, “nin”, “ninj” and “ninja” are present in array ‘A’. So, “ninja” is a valid answer whereas for “ninga” , the prefix “ning” is not present in array ‘A’.
+
+So we output “ninja”.
+
+For test case 2 we have, 
+
+The prefixes of “ab” are “a” and “ab”. “a” is not present in array ‘A’. So, “ab” is not a valid answer.
+
+The prefixes of “bc” are “b” and “bc”. “b” is not present in array ‘A’. So, “ab” is not a valid answer.
+
+Since none of the strings is a valid answer we output “None”.
+Sample Input 2 :
+2
+5
+g a ak szhkb hy 
+4
+kez vfj vfjq vfjqo 
+Sample Output 2 :
+ak
+None
+
+
+#include <bits/stdc++.h> 
+
+struct Node{
+    Node* link[26];
+    int cntPrefix = 0;
+    bool flag = false;
+    bool containsKey(char c){
+        return link[c-'a']!=NULL;
+    }
+    Node* get(char c){
+        return link[c-'a']; 
+    }
+    void put(char c,Node* temp){
+        link[c-'a'] = temp;
+    }
+    void increasePrefix(){
+        cntPrefix++;
+    }
+    void setEnd() {
+        flag = true;
+    }
+
+    // Check if the current node
+    // marks the end of a word
+    bool isEnd() {
+        return flag;
+    }
+
+};
+
+class Trie{
+    private:
+        Node* root;
+    public:
+        Trie(){
+            root = new Node(); 
+        }
+        void insert(string& word){
+            Node* temp = root;
+            for(int i = 0;i<word.size();i++){
+                if(!temp->containsKey(word[i])){
+                    temp->put(word[i],new Node());
+                }
+                temp = temp->get(word[i]);
+                temp->increasePrefix();
+            }
+            temp->setEnd();
+        }
+        bool isWordsEqualTo(string word) {
+            // Start from the root node
+            Node* node = root;
+            // Iterate over each character in the word
+            for (int i = 0; i < word.size(); i++) { 
+                // If the character is found in the trie
+                if (node->containsKey(word[i])) { 
+                    // Move to the child node
+                    // corresponding to the character
+                    node = node->get(word[i]); 
+                } else {
+                    // Return 0 if the
+                    // character is not found
+                    return false;
+                }
+            }
+            // Return the count of
+            // words ending at the node
+            return node->isEnd(); 
+    }
+};
+string completeString(int n, vector<string> &a){
+    // Write your code here.
+    Trie ninja;
+    for(int i = 0;i<n;i++){
+        ninja.insert(a[i]);
+    }
+    string maxi_word = "";
+    int maxi_cnt = 0;
+    for(int i=0;i<n;i++){
+        bool isvalid=true;
+        int cnt = 0;
+        for(int j=0;j<a[i].size();j++){
+            //cout<<a[i].substr(0,j+1)<<"1"<<endl;
+            if(!ninja.isWordsEqualTo(a[i].substr(0,j+1))){
+                //cout<<a[i].substr(0,j+1)<<"2"<<endl;
+                isvalid=false;
+                break;
+            }
+            else{
+                cnt++;
+            }
+        }
+        if (isvalid) {
+            if(cnt>maxi_cnt){
+                maxi_cnt=cnt;
+                maxi_word=a[i];
+            }
+            else if(cnt==maxi_cnt && a[i]<maxi_word){  //because we need to return lexigrophically return
+                maxi_word=a[i];
+            }
+        }
+    }
+    if(maxi_cnt>0) return maxi_word;
+    return "None";
+}
