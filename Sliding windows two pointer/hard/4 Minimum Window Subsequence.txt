@@ -1,0 +1,66 @@
+Minimum Window Subsequence
+
+Problem statement
+You are given two strings ‘S’ and ‘T’. Your task is to find the minimum (Contiguous) substring ‘W’ of ‘S’, such that ‘T’ is a subsequence of ‘W’
+
+A subsequence is a sequence that can be derived from another sequence by removing zero or more elements, without changing the order.
+
+A substring is a contiguous part of a string.
+
+For example:
+For the given string “CodingNinjas”: “Ninja” is a substring while “dinas” is a subsequence. 
+If there is no such Window in ‘S’ that covers all characters in ‘T’, return an empty string "". If there are multiple such minimum length windows, return the one with the smallest starting index.
+
+Sample Input 1 :
+2
+rdew
+u
+abcdebdde
+bde
+Sample Output 1 :
+""
+bcde
+Explanation For Sample Output 1 :
+For test case 1 :
+Since there is no window in ‘S’ which covers all characters of ‘T’ so therefore we returned an empty string.
+
+For test case 2 :
+“bcde” is the substring of minimum length in which we find “bde”. “bdde” is also a substring of minimum length however the index of “bcde” occurs first, therefore we returned bcde
+Sample Input 2:
+2
+hello
+eo
+goodbye
+dy
+Sample Output 2:
+ello
+dby
+
+string minWindow(string s, string t)
+{
+    int str=-1,len=INT_MAX;
+    int n=s.size();
+    for(int i=0;i<n;i++){
+        if(s[i]==t[0]){
+            int i1=i+1;
+            int i2=1;
+            while(i1<s.size() && i2<t.size()){
+                if(s[i1]==t[i2]){
+                    i2++;
+                }
+                i1++;
+            }
+            if(i2>=t.size()){
+
+                if (i1 - i < len) {
+                    str = i;
+                    len = i1 - i;
+                }
+            }
+		}
+    }
+    if (str == -1){
+        return "";
+    }
+    return s.substr(str,len);
+}
